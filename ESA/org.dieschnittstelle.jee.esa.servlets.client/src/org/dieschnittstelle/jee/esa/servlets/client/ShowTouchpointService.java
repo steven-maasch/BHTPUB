@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -138,8 +140,31 @@ public class ShowTouchpointService {
 	 * 
 	 * @param tp
 	 */
-	public static void deleteTouchpoint(AbstractTouchpoint tp) {
+	public void deleteTouchpoint(AbstractTouchpoint tp) {
 		logger.info("deleteTouchpoint(): " + tp);
+		
+		try {
+			final String requestURI = "http://localhost:8888/org.dieschnittstelle.jee.esa.servlets/api/touchpoint/" + String.valueOf(tp.getId());
+			final HttpDelete delete = new HttpDelete(requestURI);
+			HttpResponse response = client.execute(delete);
+			
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
+				
+			} else {
+				String err = "could not successfully execute request. Got status code: "
+						+ response.getStatusLine().getStatusCode();
+				logger.error(err);
+				throw new RuntimeException(err);
+			}
+			
+			
+		} catch (Exception e) {
+			logger.error("", e);
+			throw new RuntimeException(e);
+		}
+		
+
+		
 
 	}
 
