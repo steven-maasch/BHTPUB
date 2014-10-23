@@ -71,7 +71,8 @@ public class ShowAnnotations {
 			logger.warn("Class doesn't provide getter for field. Returning empty string.");
 			return "";
 		} catch (Exception e) {
-			throw new RuntimeException("Could not invoke getter.", e);
+			logger.error("Could not invoke getter.", e);
+			throw new RuntimeException(e);
 		}
 	} 
 
