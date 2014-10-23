@@ -144,7 +144,7 @@ public class ShowTouchpointService {
 		logger.info("deleteTouchpoint(): " + tp);
 		
 		try {
-			final String requestURI = "http://localhost:8888/org.dieschnittstelle.jee.esa.servlets/api/touchpoint/" + String.valueOf(tp.getId());
+			final String requestURI = "http://localhost:8888/org.dieschnittstelle.jee.esa.servlets/api/touchpoints/" + String.valueOf(tp.getId());
 			final HttpDelete delete = new HttpDelete(requestURI);
 			HttpResponse response = client.execute(delete);
 			
