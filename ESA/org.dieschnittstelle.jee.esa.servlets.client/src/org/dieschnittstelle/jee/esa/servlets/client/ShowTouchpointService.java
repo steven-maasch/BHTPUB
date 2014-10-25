@@ -148,7 +148,7 @@ public class ShowTouchpointService {
 			final HttpDelete delete = new HttpDelete(requestURI);
 			HttpResponse response = client.execute(delete);
 			
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) {
 				
 			} else {
 				String err = "could not successfully execute request. Got status code: "

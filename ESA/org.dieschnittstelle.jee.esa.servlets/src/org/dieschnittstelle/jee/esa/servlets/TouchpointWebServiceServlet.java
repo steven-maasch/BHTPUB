@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+
+import sun.security.krb5.SCDynamicStoreConfig;
 
 public class TouchpointWebServiceServlet extends HttpServlet {
 
@@ -47,6 +50,20 @@ public class TouchpointWebServiceServlet extends HttpServlet {
 			throw new RuntimeException(e);
 		}
 
+	}
+	
+	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		logger.info("doDelete()");
+		
+		logger.info("Request URI is " + req.getPathInfo());
+		
+		TouchpointCRUDExecutor exec = (TouchpointCRUDExecutor) getServletContext()
+				.getAttribute("touchpointCRUD");
+		
+		resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 	}
 	
 	/*
