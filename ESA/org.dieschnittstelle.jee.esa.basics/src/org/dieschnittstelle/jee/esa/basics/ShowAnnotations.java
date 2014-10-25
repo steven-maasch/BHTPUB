@@ -63,12 +63,14 @@ public class ShowAnnotations {
 		try {
 			assert object.getClass().getField(field.getName()) != null;
 			final List<Method> getMethods = getOnlyGetMethods(object.getClass());
+			final String fieldNameLower = field.getName().toLowerCase();
 			for (Method method: getMethods) {
-				if (method.getName().toLowerCase().endsWith(field.getName().toLowerCase())) {
+				if (method.getName().toLowerCase().endsWith(fieldNameLower)) {
 					return method.invoke(object);
 				}
 			}
-			logger.warn("Class doesn't provide getter for field. Returning empty string.");
+			logger.warn("Class doesn't provide getter for field " + field.getName() 
+					+ ". Return empty string.");
 			return "";
 		} catch (Exception e) {
 			logger.error("Could not invoke getter.", e);
