@@ -3,6 +3,8 @@ package org.dieschnittstelle.jee.esa.servlets;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -58,12 +60,26 @@ public class TouchpointWebServiceServlet extends HttpServlet {
 			throws ServletException, IOException {
 		logger.info("doDelete()");
 		
-		logger.info("Request URI is " + req.getPathInfo());
-		
 		TouchpointCRUDExecutor exec = (TouchpointCRUDExecutor) getServletContext()
 				.getAttribute("touchpointCRUD");
-		
-		resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		try {
+			final String requestPath = req.getPathInfo();
+			if (Pattern.matches("^/[\\d]*$", requestPath)) {
+				final String requestId = requestPath.substring(1);
+				final int tpId = Integer.parseInt(requestId);
+				if (exec.deleteTouchpoint(tpId)) {
+					resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+				} else {
+					resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				}
+			} else {
+				resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			String err = "got exception: " + e;
+			logger.error(err, e);
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/*

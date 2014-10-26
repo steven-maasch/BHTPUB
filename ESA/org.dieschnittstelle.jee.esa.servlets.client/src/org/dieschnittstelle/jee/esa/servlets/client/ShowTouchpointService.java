@@ -156,16 +156,11 @@ public class ShowTouchpointService {
 				logger.error(err);
 				throw new RuntimeException(err);
 			}
-			
-			
 		} catch (Exception e) {
 			logger.error("", e);
 			throw new RuntimeException(e);
 		}
 		
-
-		
-
 	}
 
 	/**
