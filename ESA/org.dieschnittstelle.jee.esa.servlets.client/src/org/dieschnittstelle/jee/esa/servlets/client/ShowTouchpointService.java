@@ -1,7 +1,11 @@
 package org.dieschnittstelle.jee.esa.servlets.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -10,6 +14,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
@@ -177,7 +183,32 @@ public class ShowTouchpointService {
 		logger.info("createNewTouchpoint(): " + tp);
 
 		try {
-
+			
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			final ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(tp);
+			oos.close();
+			
+			final String requestURI = "http://localhost:8888/org.dieschnittstelle.jee.esa.servlets/api/touchpoints";
+			final HttpPost post = new HttpPost(requestURI);
+			post.setEntity(new ByteArrayEntity(baos.toByteArray()));
+			
+			final HttpResponse response = client.execute(post);
+			
+			logger.info("StatusLine: " + response.getStatusLine());
+			
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
+				ObjectInputStream ois = new ObjectInputStream(response
+						.getEntity().getContent());
+				final AbstractTouchpoint respTouchPoint = (AbstractTouchpoint) ois.readObject();
+				EntityUtils.consume(response.getEntity());
+				return respTouchPoint;
+			} else {
+				throw new RuntimeException("StatusCode was not CREATED");
+			}
+			
+			
+			
 			// create post request for the api/touchpoints uri
 
 			// create an ObjectOutputStream from a ByteArrayOutputStream - the
@@ -207,7 +238,6 @@ public class ShowTouchpointService {
 			// cleanup the request
 			// EntityUtils.consume(response.getEntity());
 
-			return null;
 		} catch (Exception e) {
 			logger.error("got exception: " + e, e);
 			throw new RuntimeException(e);
