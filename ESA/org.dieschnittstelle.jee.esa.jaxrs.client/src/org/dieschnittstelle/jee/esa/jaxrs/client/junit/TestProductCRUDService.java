@@ -48,6 +48,7 @@ public class TestProductCRUDService {
 		// change the local name
 		PRODUCT_1.setName(PRODUCT_1.getName() + " " + PRODUCT_1.getName());		
 		// update the product on the server-side
+		System.out.println(PRODUCT_1);
 		client.updateProduct(PRODUCT_1);
 		
 		// read out the product and compare the names

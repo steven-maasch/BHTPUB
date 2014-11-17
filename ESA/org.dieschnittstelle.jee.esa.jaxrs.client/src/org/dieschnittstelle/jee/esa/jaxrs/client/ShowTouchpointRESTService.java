@@ -95,6 +95,10 @@ public class ShowTouchpointRESTService {
 		 * UE JRS1: add a call to the update method, passing tp
 		 */
 		logger.info("renamed touchpoint with id " + tp.getId() + " to " + tp.getName());
+		
+		tp = serviceClient.updateTouchpoint(tp);
+		
+		logger.info("update touchpoint: " + tp);
 
 		System.err.println("TestTouchpointRESTService: done.\n");
 

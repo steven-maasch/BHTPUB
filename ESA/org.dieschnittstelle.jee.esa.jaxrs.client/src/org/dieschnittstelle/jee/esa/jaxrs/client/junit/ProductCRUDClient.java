@@ -47,7 +47,9 @@ public class ProductCRUDClient {
 	}
 
 	public AbstractProduct updateProduct(AbstractProduct update) {
-		return proxy.updateProduct(update.getId(),(IndividualisedProductItem)update);
+		logger.debug(">> updateProduct()");
+		logger.debug("-- updateProduct() product: " + update);
+		return proxy.updateProduct(update.getId(), (IndividualisedProductItem) update);
 	}
 
 	public boolean deleteProduct(int id) {
