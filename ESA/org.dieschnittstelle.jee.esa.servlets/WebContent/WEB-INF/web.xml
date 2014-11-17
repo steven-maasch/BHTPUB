@@ -52,4 +52,12 @@
 	    <filter-name>TouchpointGUIServletFilter</filter-name>
 	    <servlet-name>TouchpointGUIServlet</servlet-name>	    
 	</filter-mapping>
+	<filter>
+		<filter-name>TouchpointWebServiceServletFilter</filter-name>
+		<filter-class>org.dieschnittstelle.jee.esa.servlets.TouchpointWebServiceServletFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>TouchpointWebServiceServletFilter</filter-name>
+		<servlet-name>TouchpointWebServiceServlet</servlet-name>
+	</filter-mapping>
 </web-app>
