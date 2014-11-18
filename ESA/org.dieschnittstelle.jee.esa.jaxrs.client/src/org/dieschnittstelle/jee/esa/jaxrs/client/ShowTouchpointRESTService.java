@@ -96,7 +96,7 @@ public class ShowTouchpointRESTService {
 		 */
 		logger.info("renamed touchpoint with id " + tp.getId() + " to " + tp.getName());
 		
-		tp = serviceClient.updateTouchpoint(tp);
+		tp = serviceClient.updateTouchpoint(tp.getId(), tp);
 		
 		logger.info("update touchpoint: " + tp);
 

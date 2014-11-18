@@ -50,7 +50,7 @@ public class TouchpointCRUDWebServiceImpl implements ITouchpointCRUDWebService {
 	}
 
 	@Override
-	public StationaryTouchpoint updateTouchpoint(StationaryTouchpoint touchpoint) {
+	public StationaryTouchpoint updateTouchpoint(int id, StationaryTouchpoint touchpoint) {
 		return (StationaryTouchpoint) this.touchpointCRUD.updateObject(touchpoint);
 	}
 

@@ -30,24 +30,23 @@ public class ProductCRUDWebServiceImpl implements IProductCRUDWebService {
 	}
 	
 	@Override
-	public IndividualisedProductItem createProduct(IndividualisedProductItem prod) {
-		return (IndividualisedProductItem) productCRUD.createObject(prod);
+	public IndividualisedProductItem createProduct(AbstractProduct product) {
+		return (IndividualisedProductItem) productCRUD.createObject(product);
 	}
 
 	@Override
-	public List<IndividualisedProductItem> readAllProducts() {
-		return (List) productCRUD.readAllObjects();
+	public List<AbstractProduct> readAllProducts() {
+		return (List<AbstractProduct>) productCRUD.readAllObjects();
 	}
 
 	@Override
-	public IndividualisedProductItem readProduct(int id) {
-		return (IndividualisedProductItem) productCRUD.readObject(id);
+	public AbstractProduct readProduct(int id) {
+		return (AbstractProduct) productCRUD.readObject(id);
 	}
 
 	@Override
-	public IndividualisedProductItem updateProduct(int id, IndividualisedProductItem product) {
-		// TODO: why id as parameter?
-		return (IndividualisedProductItem) productCRUD.updateObject(product);
+	public AbstractProduct updateProduct(int id, AbstractProduct product) {
+		return (AbstractProduct) productCRUD.updateObject(product);
 	}
 
 	@Override

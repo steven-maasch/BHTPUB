@@ -2,9 +2,6 @@ package org.dieschnittstelle.jee.esa.jaxrs;
 
 import java.util.List;
 
-import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
-import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,6 +10,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
+import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
 
 @Path("/resteasy/touchpoints")
 @Consumes({ "application/json" })
@@ -30,6 +29,7 @@ public interface ITouchpointCRUDWebService {
 	public boolean deleteTouchpoint(@PathParam("touchpointId") int id); 
 	
 	@PUT
-	public StationaryTouchpoint updateTouchpoint(StationaryTouchpoint touchpoint);
+	@Path("/{touchpointId}")
+	public StationaryTouchpoint updateTouchpoint(@PathParam("touchpointId") int id, StationaryTouchpoint touchpoint);
 	
 }

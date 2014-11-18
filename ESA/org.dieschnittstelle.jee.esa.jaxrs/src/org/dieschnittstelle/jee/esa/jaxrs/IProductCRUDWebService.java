@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 
 /*
@@ -33,19 +34,19 @@ import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 public interface IProductCRUDWebService {
 
 	@POST
-	public IndividualisedProductItem createProduct(IndividualisedProductItem prod);
+	public AbstractProduct createProduct(AbstractProduct product);
 
 	@GET
-	public List<IndividualisedProductItem> readAllProducts();
+	public List<AbstractProduct> readAllProducts();
 	
 	@GET
 	@Path("/{touchpointId}")
-	public IndividualisedProductItem readProduct(@PathParam("touchpointId") int id);
+	public AbstractProduct readProduct(@PathParam("touchpointId") int id);
 
 	@PUT
 	@Path("/{touchpointId}")
-	public IndividualisedProductItem updateProduct(@PathParam("touchpointId") int id,
-			IndividualisedProductItem update);
+	public AbstractProduct updateProduct(@PathParam("touchpointId") int id,
+			AbstractProduct product);
 
 	@DELETE
 	@Path("/{touchpointId}")
