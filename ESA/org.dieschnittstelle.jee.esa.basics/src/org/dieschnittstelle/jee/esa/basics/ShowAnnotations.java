@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.dieschnittstelle.jee.esa.basics.annotations.AnnotatedStockItemBuilder;
+import org.dieschnittstelle.jee.esa.basics.annotations.DisplayAs;
 import org.dieschnittstelle.jee.esa.basics.annotations.StockItemProxyImpl;
 
 public class ShowAnnotations {
@@ -48,7 +49,13 @@ public class ShowAnnotations {
 		sb.append(classSimpleName);
 		sb.append(" ");
 		for (int i = 0; i < classFieldsCount; ++i) {
-			sb.append(classFields[i].getName());
+			final Field classField = classFields[i];
+			DisplayAs fieldAnnotation = classField.getAnnotation(DisplayAs.class);
+			if (fieldAnnotation == null) {
+				sb.append(classField.getName());
+			} else {
+				sb.append(fieldAnnotation.value());
+			}
 			sb.append(":");
 			sb.append(invokeGetterForField(classFields[i], consumable));
 			if (i < lastFieldIndex) {
