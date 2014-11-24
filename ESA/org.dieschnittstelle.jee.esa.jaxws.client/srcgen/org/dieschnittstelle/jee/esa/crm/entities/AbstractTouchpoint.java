@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import org.dieschnittstelle.jee.esa.jaxws.CustomerTransaction;
+import org.dieschnittstelle.jee.esa.jaxws.Customer;
 import org.dieschnittstelle.jee.esa.jaxws.MobileTouchpoint;
 
 
@@ -25,7 +25,7 @@ import org.dieschnittstelle.jee.esa.jaxws.MobileTouchpoint;
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="erpPointOfSaleId" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="transactions" type="{http://dieschnittstelle.org/jee/esa/jaxws}customerTransaction" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="customers" type="{http://dieschnittstelle.org/jee/esa/jaxws}customer" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -39,7 +39,7 @@ import org.dieschnittstelle.jee.esa.jaxws.MobileTouchpoint;
     "id",
     "erpPointOfSaleId",
     "name",
-    "transactions"
+    "customers"
 })
 @XmlSeeAlso({
     MobileTouchpoint.class,
@@ -51,7 +51,7 @@ public abstract class AbstractTouchpoint {
     protected int erpPointOfSaleId;
     protected String name;
     @XmlElement(nillable = true)
-    protected List<CustomerTransaction> transactions;
+    protected List<Customer> customers;
 
     /**
      * Gets the value of the id property.
@@ -110,32 +110,32 @@ public abstract class AbstractTouchpoint {
     }
 
     /**
-     * Gets the value of the transactions property.
+     * Gets the value of the customers property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the transactions property.
+     * This is why there is not a <CODE>set</CODE> method for the customers property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getTransactions().add(newItem);
+     *    getCustomers().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link CustomerTransaction }
+     * {@link Customer }
      * 
      * 
      */
-    public List<CustomerTransaction> getTransactions() {
-        if (transactions == null) {
-            transactions = new ArrayList<CustomerTransaction>();
+    public List<Customer> getCustomers() {
+        if (customers == null) {
+            customers = new ArrayList<Customer>();
         }
-        return this.transactions;
+        return this.customers;
     }
 
 }
