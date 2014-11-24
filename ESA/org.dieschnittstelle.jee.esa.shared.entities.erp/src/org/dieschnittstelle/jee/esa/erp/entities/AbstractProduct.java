@@ -2,12 +2,16 @@ package org.dieschnittstelle.jee.esa.erp.entities;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.dieschnittstelle.jee.esa.entities.GenericCRUDEntity;
 
 /*
  * UE JRS3: entfernen Sie die Auskommentierung der Annotation
  */
+@XmlSeeAlso({IndividualisedProductItem.class})
+
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class AbstractProduct implements Serializable, GenericCRUDEntity {
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
@@ -12,6 +13,7 @@ import javax.xml.ws.handler.MessageContext;
 
 import org.dieschnittstelle.jee.esa.entities.GenericCRUDExecutor;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
+import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 import org.jboss.logging.Logger;
 
 /*
@@ -20,6 +22,7 @@ import org.jboss.logging.Logger;
  * die Sie aus dem ServletContext auslesen koennen
  */
 @WebService(targetNamespace = "http://dieschnittstelle.org/jee/esa/uebungen/jws4", serviceName = "ProductCRUDWebService")
+@SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public class ProductCRUDWebService {
 	
 	private static Logger logger = Logger.getLogger(ProductCRUDWebService.class);
@@ -71,7 +74,7 @@ public class ProductCRUDWebService {
 		
 		logger.info("<< createProduct()");
 		
-		return productCRUD.createObject(product);
+		return (IndividualisedProductItem) productCRUD.createObject(product);
 	}
 	
 }
