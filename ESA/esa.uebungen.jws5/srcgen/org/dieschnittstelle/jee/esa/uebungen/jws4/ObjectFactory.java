@@ -44,6 +44,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link IndividualisedProductItem }
+     * 
+     */
+    public IndividualisedProductItem createIndividualisedProductItem() {
+        return new IndividualisedProductItem();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link AbstractProduct }{@code >}}
      * 
      */

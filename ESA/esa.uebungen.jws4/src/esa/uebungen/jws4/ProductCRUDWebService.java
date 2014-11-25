@@ -30,6 +30,11 @@ public class ProductCRUDWebService {
 	@Resource
 	private WebServiceContext wscontext;
 	
+	
+	public ProductCRUDWebService() {
+		logger.info("<constructor>");
+	}
+	
 	@WebMethod
 	public List<AbstractProduct> readAllProducts() {
 		logger.info(">> readAllProducts()");
@@ -45,7 +50,7 @@ public class ProductCRUDWebService {
 		@SuppressWarnings("unchecked")
 		GenericCRUDExecutor<AbstractProduct> productCRUD = (GenericCRUDExecutor<AbstractProduct>) ctx
 				.getAttribute("productCRUD");
-		logger.info("readAllProducts(): read prductCRUD from servletContext: "
+		logger.info("readAllProducts(): read productCRUD from servletContext: "
 				+ productCRUD);
 
 		logger.info("<< readAllProducts()");

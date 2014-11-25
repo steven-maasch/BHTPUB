@@ -3,6 +3,7 @@ package org.dieschnittstelle.jee.esa.uebungen.jws4;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -32,6 +33,9 @@ import javax.xml.bind.annotation.XmlType;
     "id",
     "name",
     "price"
+})
+@XmlSeeAlso({
+    IndividualisedProductItem.class
 })
 public abstract class AbstractProduct {
 
