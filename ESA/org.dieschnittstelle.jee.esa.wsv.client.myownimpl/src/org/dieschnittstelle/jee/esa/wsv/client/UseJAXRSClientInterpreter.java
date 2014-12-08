@@ -1,6 +1,7 @@
 package org.dieschnittstelle.jee.esa.wsv.client;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
@@ -26,13 +27,17 @@ public class UseJAXRSClientInterpreter {
 		 * TODO: create an instance of the invocation handler passing the service
 		 * interface and the base url 
 		 */
+		final InvocationHandler handler = new MyInvocationHandler(ITouchpointCRUDWebService.class, null);
 
 		/*
 		 * TODO: create a client for the web service using Proxy.newProxyInstance() we
 		 * do not use the .jaxrs.demo URL because the settings specify the
 		 * context as .jaxrs - might need to clear the tomcat working dir
 		 */
-		ITouchpointCRUDWebService serviceClient = null;
+		ITouchpointCRUDWebService serviceClient = (ITouchpointCRUDWebService) Proxy.newProxyInstance(
+				UseJAXRSClientInterpreter.class.getClassLoader(),
+				new Class[] {ITouchpointCRUDWebService.class},
+				handler);
 		
 		show(serviceClient);
 		step();
