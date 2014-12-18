@@ -1,10 +1,8 @@
 package de.bht.maasch.esa.wsv.client.impl;
 
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Arrays;
 
 import javax.ws.rs.DELETE;
@@ -17,7 +15,6 @@ import javax.ws.rs.PathParam;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 public class MyInvocationHandler implements InvocationHandler {
 
@@ -88,11 +86,16 @@ public class MyInvocationHandler implements InvocationHandler {
 				
 				try {
 				    HttpEntity entity = response.getEntity();
+				    logger.debug("Status code = {}", response.getStatusLine().getStatusCode());
 				    if (entity != null) {
-				    	mapper.readValue(entity.getContent(), StationaryTouchpoint.class);
-				        InputStream instream = entity.getContent();
-				        int byteOne = instream.read();
-				        int byteTwo = instream.read();
+				    	
+				    	JaxbAnnotationModule module = new JaxbAnnotationModule();
+				    	mapper.registerModule(module);
+				    	
+				    	logger.debug("<< invoke()");
+				    	
+				    	return mapper.readValue(entity.getContent(), StationaryTouchpoint.class);
+
 				    }
 				} finally {
 				    response.close();

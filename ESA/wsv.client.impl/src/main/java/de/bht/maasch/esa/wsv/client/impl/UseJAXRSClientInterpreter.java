@@ -27,7 +27,8 @@ public class UseJAXRSClientInterpreter {
 		 * create an instance of the invocation handler passing the service
 		 * interface and the base url 
 		 */
-		final InvocationHandler handler = new MyInvocationHandler(ITouchpointCRUDWebService.class, null);
+		final InvocationHandler handler = new MyInvocationHandler(ITouchpointCRUDWebService.class, 
+				"http://localhost:8888/org.dieschnittstelle.jee.esa.wsv");
 
 		/*
 		 * create a client for the web service using Proxy.newProxyInstance() we
@@ -43,7 +44,8 @@ public class UseJAXRSClientInterpreter {
 		step();
 
 		{
-			StationaryTouchpoint tp = serviceClient.readTouchpoint(2);
+			StationaryTouchpoint tp = serviceClient.readTouchpoint(0);
+			show("get" + tp);
 		}
 		// 1) read out all touchpoints
 		List<StationaryTouchpoint> tps = serviceClient.readAllTouchpoints();
