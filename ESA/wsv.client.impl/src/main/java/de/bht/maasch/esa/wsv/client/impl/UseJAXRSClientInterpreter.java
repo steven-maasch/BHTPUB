@@ -5,14 +5,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+import de.bht.maasch.esa.wsv.client.impl.MyInvocationHandler;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.jaxrs.JacksonJaxbJsonProvider;
-import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
 import org.dieschnittstelle.jee.esa.crm.entities.Address;
 import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
-import org.dieschnittstelle.jee.esa.wsv.ITouchpointCRUDWebService;
-import org.dieschnittstelle.jee.esa.wsv.interpreter.JAXRSClientInterpreter;
+
+import de.bht.maasch.esa.wsv.client.intfs.ITouchpointCRUDWebService;
 
 public class UseJAXRSClientInterpreter {
 
@@ -24,13 +24,13 @@ public class UseJAXRSClientInterpreter {
 	public static void main(String[] args) {
 
 		/*
-		 * TODO: create an instance of the invocation handler passing the service
+		 * create an instance of the invocation handler passing the service
 		 * interface and the base url 
 		 */
 		final InvocationHandler handler = new MyInvocationHandler(ITouchpointCRUDWebService.class, null);
 
 		/*
-		 * TODO: create a client for the web service using Proxy.newProxyInstance() we
+		 * create a client for the web service using Proxy.newProxyInstance() we
 		 * do not use the .jaxrs.demo URL because the settings specify the
 		 * context as .jaxrs - might need to clear the tomcat working dir
 		 */
@@ -42,6 +42,9 @@ public class UseJAXRSClientInterpreter {
 		show(serviceClient);
 		step();
 
+		{
+			StationaryTouchpoint tp = serviceClient.readTouchpoint(2);
+		}
 		// 1) read out all touchpoints
 		List<StationaryTouchpoint> tps = serviceClient.readAllTouchpoints();
 		show("read all: " + tps);

@@ -32,8 +32,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.dieschnittstelle.jee.esa.wsv"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.dieschnittstelle.jee.esa.shared.entities.crm"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.dieschnittstelle.jee.esa.wsv.interpreter"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.dieschnittstelle.jee.esa.shared.entities.erp"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
