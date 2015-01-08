@@ -1,5 +1,7 @@
 package de.bht.maasch.esa.wsv.client.impl;
 
+import java.awt.List;
+import java.io.ByteArrayOutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -11,17 +13,25 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 public class MyInvocationHandler implements InvocationHandler {
@@ -82,32 +92,64 @@ public class MyInvocationHandler implements InvocationHandler {
 				logger.debug("GET annotation present.");
 				
 				final HttpGet httpGet = new HttpGet(completePath.toString());
-				final CloseableHttpResponse response = httpClient.execute(httpGet);
+				httpGet.setHeader("Accept", "application/json");
 				
-				try {
+				try (final CloseableHttpResponse response = httpClient.execute(httpGet)) {
 				    HttpEntity entity = response.getEntity();
 				    logger.debug("Status code = {}", response.getStatusLine().getStatusCode());
 				    if (entity != null) {
-				    	
 				    	JaxbAnnotationModule module = new JaxbAnnotationModule();
 				    	mapper.registerModule(module);
 				    	
 				    	logger.debug("<< invoke()");
-				    	
-				    	return mapper.readValue(entity.getContent(), StationaryTouchpoint.class);
-
+				    	return mapper.readValue(entity.getContent(), 
+				    			TypeFactory.defaultInstance()
+				    				.constructType(intfsMethod.getGenericReturnType()));
 				    }
-				} finally {
-				    response.close();
 				}
 			} else if (intfsMethod.getAnnotation(POST.class) != null) {
 				logger.debug("POST annotation present.");
+				
+				final HttpPost httpPost = new HttpPost(completePath.toString());
+				httpPost.setHeader("Accept", "application/json");
+				httpPost.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
+				
+				JaxbAnnotationModule module = new JaxbAnnotationModule();
+		    	mapper.registerModule(module);
+		    	
+		    	try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+		    		mapper.writeValue(out, args[0]);
+					final ByteArrayEntity entity = new ByteArrayEntity(out.toByteArray(), ContentType.APPLICATION_JSON);
+			    	httpPost.setEntity(entity);
+		    	}
+		    	
+				try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
+					HttpEntity entity = response.getEntity();
+				    logger.debug("Status code = {}", response.getStatusLine().getStatusCode());
+				    if (entity != null) {
+				    	JaxbAnnotationModule moduleResponse = new JaxbAnnotationModule();
+				    	mapper.registerModule(moduleResponse);
+				    	
+				    	logger.debug("<< invoke()");
+				    	return mapper.readValue(entity.getContent(), 
+				    			TypeFactory.defaultInstance()
+				    				.constructType(intfsMethod.getGenericReturnType()));
+				    }
+				}
+				EntityUtils.consumeQuietly(httpPost.getEntity());
 			} else if (intfsMethod.getAnnotation(PUT.class) != null) {
 				logger.debug("PUT annotation present.");
 			} else if (intfsMethod.getAnnotation(DELETE.class) != null) {
 				logger.debug("DELETE annotation present.");
+				
+				final HttpDelete httpDelete = new HttpDelete(completePath.toString());
+				
+				try (final CloseableHttpResponse response = httpClient.execute(httpDelete)) {
+					final int statusCode = response.getStatusLine().getStatusCode();
+					logger.debug("Status code = {}", statusCode);
+					return statusCode >= 200 && statusCode < 300;
+				}
 			}
-			
 			return null;
 		} catch(NoSuchMethodException e) {
 			logger.error("Method {} not declared in {}.", method.getName(), intfs);

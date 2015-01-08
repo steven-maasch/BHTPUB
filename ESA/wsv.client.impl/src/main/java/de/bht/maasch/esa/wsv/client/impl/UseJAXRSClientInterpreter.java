@@ -3,6 +3,7 @@ package de.bht.maasch.esa.wsv.client.impl;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.List;
 
 import de.bht.maasch.esa.wsv.client.impl.MyInvocationHandler;
@@ -45,14 +46,16 @@ public class UseJAXRSClientInterpreter {
 
 		{
 			StationaryTouchpoint tp = serviceClient.readTouchpoint(0);
-			show("get" + tp);
+			show("get: " + tp);
 		}
+		
 		// 1) read out all touchpoints
 		List<StationaryTouchpoint> tps = serviceClient.readAllTouchpoints();
 		show("read all: " + tps);
 
 		// 2) delete the touchpoint if there is one
 		step();
+		
 		if (tps.size() > 0) {
 			show("deleted: "
 					+ serviceClient.deleteTouchpoint(tps.get(0).getId()));
@@ -86,6 +89,7 @@ public class UseJAXRSClientInterpreter {
 		
 		tp = serviceClient.updateTouchpoint(tp.getId(), tp);
 		show("updated: " + tp);
+		
 
 	}
 
