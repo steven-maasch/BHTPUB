@@ -44,11 +44,6 @@ public class UseJAXRSClientInterpreter {
 		show(serviceClient);
 		step();
 
-		{
-			StationaryTouchpoint tp = serviceClient.readTouchpoint(0);
-			show("get: " + tp);
-		}
-		
 		// 1) read out all touchpoints
 		List<StationaryTouchpoint> tps = serviceClient.readAllTouchpoints();
 		show("read all: " + tps);
