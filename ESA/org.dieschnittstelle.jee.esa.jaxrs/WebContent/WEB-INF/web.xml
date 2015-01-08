@@ -43,4 +43,15 @@
         <!--  this might needs to be adapted for your own URL patterns -->
         <url-pattern>/resteasy/*</url-pattern>
     </servlet-mapping>
+    <!-- WSV 2 Server -->
+    <servlet>
+	    <servlet-name>JAXRSServlet</servlet-name>
+	    <servlet-class>
+	    	de.maasch.bht.esa.wsv.server.jaxrs.JAXRSServlet
+	    </servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>JAXRSServlet</servlet-name>
+    	<url-pattern>/wsv/server/*</url-pattern>
+    </servlet-mapping>
 </web-app>
