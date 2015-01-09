@@ -8,21 +8,23 @@ import javax.naming.InitialContext;
 import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.*;
+
 public class StockSystemClient implements StockSystemRemote {
 
 	private StockSystemRemote proxy;
 	
 	public StockSystemClient() throws Exception {
-//		Context context = new InitialContext();
-//		
-//		this.proxy = (StockSystemRemote) context
-//				.lookup("");
+		Context context = new InitialContext();
+		
+		this.proxy = (StockSystemRemote) context
+				.lookup(STOCK_SYSTEM_BEAN);
 	}
 	
 	
 	@Override
 	public void addToStock(IndividualisedProductItem product, int pointOfSaleId, int units) {
-		//this.proxy.addToStock(product, pointOfSaleId, units);
+		this.proxy.addToStock(product, pointOfSaleId, units);
 	}
 
 	@Override
@@ -45,8 +47,7 @@ public class StockSystemClient implements StockSystemRemote {
 
 	@Override
 	public int getUnitsOnStock(IndividualisedProductItem product, int pointOfSaleId) {
-		//return this.proxy.getUnitsOnStock(product, pointOfSaleId);
-		return 0;
+		return this.proxy.getUnitsOnStock(product, pointOfSaleId);
 	}
 
 	@Override
