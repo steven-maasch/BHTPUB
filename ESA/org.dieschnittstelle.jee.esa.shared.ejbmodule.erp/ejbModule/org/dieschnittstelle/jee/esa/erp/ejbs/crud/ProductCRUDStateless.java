@@ -8,12 +8,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
-import org.jboss.logging.Logger;
 
 @Stateless
 public class ProductCRUDStateless implements ProductCRUDRemote {
-
-	private static final Logger logger = Logger.getLogger(ProductCRUDStateless.class);
 	
 	@PersistenceContext(unitName = "crm_erp_PU")
 	private EntityManager em;

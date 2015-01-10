@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Singleton;
+import javax.inject.Inject;
 
+import org.dieschnittstelle.jee.esa.erp.ejbs.crud.PointOfSaleCRUDLocal;
+import org.dieschnittstelle.jee.esa.erp.ejbs.crud.StockItemCRUDLocal;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 import org.jboss.logging.Logger;
+
+import com.sun.org.glassfish.gmbal.IncludeSubclass;
 
 @Singleton
 public class StockSystem implements StockSystemRemote {
@@ -16,6 +21,13 @@ public class StockSystem implements StockSystemRemote {
 	private final static Logger logger = Logger.getLogger(StockSystem.class);
 	
 	private final Map<Integer, Map<String, StockItem>> DB = new HashMap<Integer, Map<String, StockItem>>();
+	
+	@Inject
+	private StockItemCRUDLocal stockItemCRUD;
+	
+	@Inject 
+	private PointOfSaleCRUDLocal pointOfSaleCRUD;
+	
 	
 	@Override
 	public void addToStock(IndividualisedProductItem product,
@@ -55,13 +67,14 @@ public class StockSystem implements StockSystemRemote {
 
 	@Override
 	public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<IndividualisedProductItem> getAllProductsOnStock() {
-		// TODO Auto-generated method stub
+		final List<StockItem> stockItems = stockItemCRUD.readAllStockItems();
+		final List<IndividualisedProductItem> productItems
+		
 		return null;
 	}
 

@@ -37,12 +37,12 @@ public class PointOfSaleCRUDStateless implements PointOfSaleCRUDRemote, PointOfS
 
 	@Override
 	public PointOfSale readPointOfSale(int posId) {
-		return em.find(PointOfSale.class,posId);
+		return em.find(PointOfSale.class, posId);
 	}
 
 	@Override
 	public boolean deletePointOfSale(int posId) {
-		em.remove(em.find(PointOfSale.class,posId));
+		em.remove(em.find(PointOfSale.class, posId));
 		return true;
 	}
 
