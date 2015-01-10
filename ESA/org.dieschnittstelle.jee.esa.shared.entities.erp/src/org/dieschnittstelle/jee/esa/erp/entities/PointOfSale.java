@@ -2,6 +2,8 @@ package org.dieschnittstelle.jee.esa.erp.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ import javax.persistence.PreUpdate;
 import org.jboss.logging.Logger;
 
 @Entity
+@Access(AccessType.FIELD)
 public class PointOfSale implements Serializable {
 
 	/**

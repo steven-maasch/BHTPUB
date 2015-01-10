@@ -7,7 +7,7 @@
 		<driver>mysql</driver>
 		<security>
 			<user-name>root</user-name>
-			<password></password>
+			<password>toor</password>
 		</security>
 	</datasource>
 	<!-- in-Memory Datenbank -->

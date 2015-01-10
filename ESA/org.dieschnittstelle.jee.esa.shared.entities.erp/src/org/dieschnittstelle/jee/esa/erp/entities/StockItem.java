@@ -1,5 +1,7 @@
 package org.dieschnittstelle.jee.esa.erp.entities;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,7 +18,8 @@ import javax.persistence.Table;
 
 import org.jboss.logging.Logger;
 
-//@Entity
+@Entity
+@Access(AccessType.FIELD)
 @Table(name = "stock")
 @IdClass(ProductAtPosPK.class)
 public class StockItem {

@@ -2,8 +2,17 @@ package org.dieschnittstelle.jee.esa.erp.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+@Entity
+@Access(AccessType.FIELD)
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class IndividualisedProductItem extends AbstractProduct implements Serializable {
 	
 	/**

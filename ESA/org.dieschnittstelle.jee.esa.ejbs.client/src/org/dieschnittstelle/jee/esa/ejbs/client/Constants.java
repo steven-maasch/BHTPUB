@@ -109,7 +109,9 @@ public class Constants {
 	public static final String TRANSACTIONS_CRUD_BEAN = "ejb:org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.crm/CustomerTransactionCRUDStateless!org.dieschnittstelle.jee.esa.crm.ejbs.crud.CustomerTransactionCRUDRemote";
 	public static final String POS_CRUD_BEAN = "ejb:org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/PointOfSaleCRUDStateless!org.dieschnittstelle.jee.esa.erp.ejbs.crud.PointOfSaleCRUDRemote";
 	public static final String STOCK_SYSTEM_BEAN = "ejb:org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystem!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote";
-
+	public static final String PRODUCT_CRUD_BEAN = "ejb:org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/ProductCRUDStateless!org.dieschnittstelle.jee.esa.erp.ejbs.crud.ProductCRUDRemote";
+	
+	
 	/*
 	 * constants for the objects that are dealt with in the different accessors
 	 * to the beans
