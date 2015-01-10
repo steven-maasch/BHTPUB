@@ -1,5 +1,7 @@
 package org.dieschnittstelle.jee.esa.erp.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
@@ -7,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostRemove;
@@ -22,7 +26,18 @@ import org.jboss.logging.Logger;
 @Access(AccessType.FIELD)
 @Table(name = "stock")
 @IdClass(ProductAtPosPK.class)
-public class StockItem {
+@NamedQueries({
+	@NamedQuery(name="StockItem.findAll", query="SELECT s FROM StockItem s"),
+	@NamedQuery(name="StockItem.findByProductAndPosId", 
+		query="SELECT s FROM StockItem s WHERE s.product.id = :product_id AND s.pos.id = :pos_id"),
+	@NamedQuery(name="StockItem.findByProductId", 
+		query="SELECT s FROM StockItem s WHERE s.product.id = :product_id"),
+	@NamedQuery(name="StockItem.findAllByPosId", 
+		query="SELECT s FROM StockItem s WHERE s.pos.id = :pos_id")
+})
+public class StockItem implements Serializable {
+
+	private static final long serialVersionUID = -523570877265085869L;
 
 	protected static Logger logger = Logger.getLogger(StockItem.class);
 

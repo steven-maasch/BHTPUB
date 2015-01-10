@@ -14,10 +14,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 @Access(AccessType.FIELD)
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class IndividualisedProductItem extends AbstractProduct implements Serializable {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 5109263395081656350L;
 
 	private ProductType productType;
@@ -64,8 +61,6 @@ public class IndividualisedProductItem extends AbstractProduct implements Serial
 	
 	public int hashCode() {
 		int code = HashCodeBuilder.reflectionHashCode(this);
-		System.out.println("hashCode of " + this + ": " + hashCode());
-		
 		return code;
 	}
 

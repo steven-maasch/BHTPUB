@@ -1,91 +1,105 @@
 package org.dieschnittstelle.jee.esa.erp.ejbs;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.dieschnittstelle.jee.esa.erp.ejbs.crud.PointOfSaleCRUDLocal;
 import org.dieschnittstelle.jee.esa.erp.ejbs.crud.StockItemCRUDLocal;
+import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
+import org.dieschnittstelle.jee.esa.erp.entities.PointOfSale;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 import org.jboss.logging.Logger;
-
-import com.sun.org.glassfish.gmbal.IncludeSubclass;
 
 @Singleton
 public class StockSystem implements StockSystemRemote {
 	
 	private final static Logger logger = Logger.getLogger(StockSystem.class);
 	
-	private final Map<Integer, Map<String, StockItem>> DB = new HashMap<Integer, Map<String, StockItem>>();
+	@PersistenceContext(unitName = "crm_erp_PU")
+	private EntityManager em;
 	
-	@Inject
+	@EJB
 	private StockItemCRUDLocal stockItemCRUD;
 	
-	@Inject 
+	@EJB
 	private PointOfSaleCRUDLocal pointOfSaleCRUD;
 	
-	
 	@Override
-	public void addToStock(IndividualisedProductItem product,
-			int pointOfSaleId, int units) {
+	public void addToStock(final IndividualisedProductItem product,
+			final int pointOfSaleId, final int units) {
 		
-		final Map<String, StockItem> stockItemsOfPoint = DB.get(pointOfSaleId);
+		final PointOfSale pointOfSale = pointOfSaleCRUD.readPointOfSale(pointOfSaleId);
 		
-		if (stockItemsOfPoint != null) {
-			final StockItem stockItem = stockItemsOfPoint.get(product.getName());
+		if (pointOfSale != null) {
+			final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
 			if (stockItem != null) {
-				stockItem.setUnits(stockItem.getUnits() + units);
+				stockItem.setUnits(units + stockItem.getUnits());
 			} else {
-				final StockItem stockItem1 = new StockItem();
-				stockItem1.setProduct(product);
-				stockItem1.setUnits(units);
-				stockItemsOfPoint.put(product.getName(), stockItem1);
+				// TODO: Q: Warum hier merge?
+				final StockItem newStockItem = new StockItem(em.merge(product), pointOfSale, units);
+				stockItemCRUD.createStockItem(newStockItem);
 			}
-		} else {	
-			final StockItem stockItem = new StockItem();
-			stockItem.setProduct(product);
-			stockItem.setUnits(units);
-			
-			final Map<String, StockItem> stockItemEntry = 
-					new HashMap<String, StockItem>(1);
-			stockItemEntry.put(product.getName(), stockItem);
-			DB.put(pointOfSaleId, stockItemEntry);
+		} else {
+			// TODO: if PointOfSale not exists? Create??
 		}
-		logger.info("DB size: " + DB.size());
 	}
 
 	@Override
 	public void removeFromStock(IndividualisedProductItem product,
 			int pointOfSaleId, int units) {
-		// TODO Auto-generated method stub
-
+		
+		final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
+		logger.info("---------------" + stockItem);
+		if (stockItem != null) {
+			int newUnits = stockItem.getUnits() - units;
+			stockItem.setUnits(newUnits < 0 ? 0 : newUnits);
+			em.merge(stockItem);
+			// Q: IF 0 DELETE?
+		}
 	}
 
 	@Override
 	public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId) {
-		return null;
+		final List<IndividualisedProductItem> productItems = 
+				new LinkedList<IndividualisedProductItem>();
+		
+		for (StockItem stockItem : stockItemCRUD.getAllStockItemsByPosId(pointOfSaleId)) {
+			final AbstractProduct product = stockItem.getProduct();
+			// TODO: Campaigns ????!!!!!!!!!!!????????
+			if (product instanceof IndividualisedProductItem) {
+				productItems.add((IndividualisedProductItem) product);
+			}
+		}
+		return productItems;
 	}
 
 	@Override
 	public List<IndividualisedProductItem> getAllProductsOnStock() {
-		final List<StockItem> stockItems = stockItemCRUD.readAllStockItems();
-		final List<IndividualisedProductItem> productItems
+		final List<IndividualisedProductItem> productItems = new LinkedList<IndividualisedProductItem>();
 		
-		return null;
+		for (StockItem stockItem : stockItemCRUD.getAllStockItems()) {
+			final AbstractProduct product = stockItem.getProduct();
+			// TODO: Campaigns ????!!!!!!!!!!!????????
+			if (product instanceof IndividualisedProductItem) {
+				productItems.add((IndividualisedProductItem) product);
+			}
+		}
+		return productItems;
 	}
 
 	@Override
-	public int getUnitsOnStock(IndividualisedProductItem product,
-			int pointOfSaleId) {
+	public int getUnitsOnStock(IndividualisedProductItem product, int pointOfSaleId) {
 		int unitsOnStock = 0;
+		final PointOfSale pointOfSale = pointOfSaleCRUD.readPointOfSale(pointOfSaleId);
 		
-		final Map<String, StockItem> stockItemsOfPoint = DB.get(pointOfSaleId);
-		if (stockItemsOfPoint != null) {
-			final StockItem stockItem = stockItemsOfPoint.get(product.getName());
+		if (pointOfSale != null) {
+			final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
 			if (stockItem != null) {
 				unitsOnStock = stockItem.getUnits();
 			}
@@ -95,14 +109,22 @@ public class StockSystem implements StockSystemRemote {
 
 	@Override
 	public int getTotalUnitsOnStock(IndividualisedProductItem product) {
-		// TODO Auto-generated method stub
-		return 0;
+		int totalUnitsOnStock = 0;
+		
+		for (StockItem stockItem : stockItemCRUD.getStockItemsByProduct(product)) {
+			totalUnitsOnStock += stockItem.getUnits();
+		}
+		return totalUnitsOnStock;
 	}
 
 	@Override
 	public List<Integer> getPointsOfSale(IndividualisedProductItem product) {
-		// TODO Auto-generated method stub
-		return null;
+		final List<Integer> pointOfSaleIds = new LinkedList<Integer>();
+
+		for (StockItem stockItem : stockItemCRUD.getStockItemsByProduct(product)) {
+			pointOfSaleIds.add(stockItem.getPos().getId());
+		}
+		return pointOfSaleIds;
 	}
 
 }

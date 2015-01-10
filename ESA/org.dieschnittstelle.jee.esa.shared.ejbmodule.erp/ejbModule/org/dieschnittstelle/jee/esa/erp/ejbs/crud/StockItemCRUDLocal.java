@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.ProductAtPosPK;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
@@ -12,10 +13,11 @@ public interface StockItemCRUDLocal {
 
 	public StockItem createStockItem(StockItem item);
 	
-	public List<StockItem> readAllStockItems();
+	public List<StockItem> getAllStockItems();
 	
-	public StockItem readStockItem(ProductAtPosPK posId);
+	public StockItem getStockItem(AbstractProduct product, int pointOfSaleId);
 	
-	public boolean deleteStockItem(ProductAtPosPK posId);
+	public List<StockItem> getAllStockItemsByPosId(int posId);
 	
+	public List<StockItem> getStockItemsByProduct(AbstractProduct product);
 }
