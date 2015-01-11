@@ -61,7 +61,19 @@ public class StockItemCRUDStateless implements StockItemCRUDLocal {
 		final TypedQuery<StockItem> query = em.createNamedQuery("StockItem.findByProductId", StockItem.class);
 		return query.setParameter("product_id", product.getId()).getResultList();
 	}
-	
-	
+
+	@Override
+	public long getSumTotalUnits(AbstractProduct product) {
+		final TypedQuery<Long> query = em.createNamedQuery("StockItem.sumUnitsByProductId", Long.class);
+		return query.setParameter("product_id", product.getId()).getSingleResult();
+	}
+
+	@Override
+	public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId) {
+		final TypedQuery<Integer> query = em.createNamedQuery("StockItem.getUnits", Integer.class);
+		return query.setParameter("product_id", product.getId())
+				.setParameter("pos_id", pointOfSaleId)
+				.getSingleResult();
+	}
 
 }

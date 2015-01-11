@@ -14,12 +14,9 @@ import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 import org.dieschnittstelle.jee.esa.erp.entities.PointOfSale;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
-import org.jboss.logging.Logger;
 
 @Singleton
 public class StockSystem implements StockSystemRemote {
-	
-	private final static Logger logger = Logger.getLogger(StockSystem.class);
 	
 	@PersistenceContext(unitName = "crm_erp_PU")
 	private EntityManager em;
@@ -55,12 +52,11 @@ public class StockSystem implements StockSystemRemote {
 			int pointOfSaleId, int units) {
 		
 		final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
-		logger.info("---------------" + stockItem);
 		if (stockItem != null) {
 			int newUnits = stockItem.getUnits() - units;
 			stockItem.setUnits(newUnits < 0 ? 0 : newUnits);
 			em.merge(stockItem);
-			// Q: IF 0 DELETE?
+			// TODO: Q: IF 0 DELETE?
 		}
 	}
 
@@ -95,26 +91,13 @@ public class StockSystem implements StockSystemRemote {
 
 	@Override
 	public int getUnitsOnStock(IndividualisedProductItem product, int pointOfSaleId) {
-		int unitsOnStock = 0;
-		final PointOfSale pointOfSale = pointOfSaleCRUD.readPointOfSale(pointOfSaleId);
-		
-		if (pointOfSale != null) {
-			final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
-			if (stockItem != null) {
-				unitsOnStock = stockItem.getUnits();
-			}
-		}
-		return unitsOnStock;
+		return stockItemCRUD.getUnitsOnStock(product, pointOfSaleId);
 	}
 
 	@Override
 	public int getTotalUnitsOnStock(IndividualisedProductItem product) {
-		int totalUnitsOnStock = 0;
-		
-		for (StockItem stockItem : stockItemCRUD.getStockItemsByProduct(product)) {
-			totalUnitsOnStock += stockItem.getUnits();
-		}
-		return totalUnitsOnStock;
+		// TODO: Maybe change return type to long
+		return (int) stockItemCRUD.getSumTotalUnits(product);
 	}
 
 	@Override

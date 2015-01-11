@@ -33,7 +33,11 @@ import org.jboss.logging.Logger;
 	@NamedQuery(name="StockItem.findByProductId", 
 		query="SELECT s FROM StockItem s WHERE s.product.id = :product_id"),
 	@NamedQuery(name="StockItem.findAllByPosId", 
-		query="SELECT s FROM StockItem s WHERE s.pos.id = :pos_id")
+		query="SELECT s FROM StockItem s WHERE s.pos.id = :pos_id"),
+	@NamedQuery(name="StockItem.sumUnitsByProductId",
+		query="SELECT sum(s.units) FROM StockItem s WHERE s.product.id = :product_id"),
+	@NamedQuery(name="StockItem.getUnits",
+		query="SELECT s.units FROM StockItem s WHERE s.product.id = :product_id AND s.pos.id = :pos_id")
 })
 public class StockItem implements Serializable {
 
