@@ -1,26 +1,27 @@
 package org.dieschnittstelle.jee.esa.shopping;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.ejb.StatefulTimeout;
 
 import org.dieschnittstelle.jee.esa.crm.ejbs.CampaignTrackingLocal;
-import org.dieschnittstelle.jee.esa.crm.ejbs.CampaignTrackingRemote;
 import org.dieschnittstelle.jee.esa.crm.ejbs.CustomerTrackingLocal;
-import org.dieschnittstelle.jee.esa.crm.ejbs.CustomerTrackingRemote;
 import org.dieschnittstelle.jee.esa.crm.ejbs.ShoppingCartLocal;
 import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
 import org.dieschnittstelle.jee.esa.crm.entities.CrmProductBundle;
 import org.dieschnittstelle.jee.esa.crm.entities.Customer;
 import org.dieschnittstelle.jee.esa.crm.entities.CustomerTransaction;
 import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal;
-import org.dieschnittstelle.jee.esa.erp.ejbs.crud.StockItemCRUDLocal;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.Campaign;
 import org.jboss.logging.Logger;
 
 @Stateful
+@StatefulTimeout(value=10, unit=TimeUnit.MINUTES)
 public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemote {
 
 	protected static Logger logger = Logger.getLogger(ShoppingSessionFacadeStateful.class);
@@ -76,8 +77,9 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 		
 		for (CrmProductBundle productBundle : this.shoppingCart
 				.getProductBundles()) {
+
 			
-			
+			// TODO: Still working
 			
 			if (productUnitsInStock(productBundle)) {
 				logger.warn("-- Enough units in stock.");
@@ -152,5 +154,11 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 
 		logger.info("purchase(): done.\n");
 	}
+	
+	@PreDestroy
+	public void destroy() {
+		logger.info("-- Destroy Shopping Session");
+	}
+	
 	
 }
