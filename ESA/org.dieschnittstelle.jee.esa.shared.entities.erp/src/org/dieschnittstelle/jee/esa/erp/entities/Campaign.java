@@ -25,7 +25,8 @@ public class Campaign extends AbstractProduct implements Serializable {
 	 */
 	private static final long serialVersionUID = 4407600000386810001L;
 
-	@OneToMany(cascade = CascadeType.MERGE)
+	// TODO: CHANGE: ADD PERSIST
+	@OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	private List<ProductBundle> bundles;
 
 	public Campaign() {

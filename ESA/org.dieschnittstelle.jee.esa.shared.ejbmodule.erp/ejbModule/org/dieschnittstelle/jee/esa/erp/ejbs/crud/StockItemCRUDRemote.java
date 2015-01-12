@@ -2,13 +2,13 @@ package org.dieschnittstelle.jee.esa.erp.ejbs.crud;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
-@Local
-public interface StockItemCRUDLocal {
+@Remote
+public interface StockItemCRUDRemote {
 
 	StockItem createStockItem(StockItem item);
 	

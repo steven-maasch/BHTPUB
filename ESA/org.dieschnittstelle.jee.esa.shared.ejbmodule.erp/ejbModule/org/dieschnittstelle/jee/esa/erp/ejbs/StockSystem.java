@@ -1,5 +1,6 @@
 package org.dieschnittstelle.jee.esa.erp.ejbs;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,12 +12,14 @@ import javax.persistence.PersistenceContext;
 import org.dieschnittstelle.jee.esa.erp.ejbs.crud.PointOfSaleCRUDLocal;
 import org.dieschnittstelle.jee.esa.erp.ejbs.crud.StockItemCRUDLocal;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
+import org.dieschnittstelle.jee.esa.erp.entities.Campaign;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 import org.dieschnittstelle.jee.esa.erp.entities.PointOfSale;
+import org.dieschnittstelle.jee.esa.erp.entities.ProductBundle;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
 @Singleton
-public class StockSystem implements StockSystemRemote {
+public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	
 	@PersistenceContext(unitName = "crm_erp_PU")
 	private EntityManager em;
@@ -70,6 +73,11 @@ public class StockSystem implements StockSystemRemote {
 			// TODO: Campaigns ????!!!!!!!!!!!????????
 			if (product instanceof IndividualisedProductItem) {
 				productItems.add((IndividualisedProductItem) product);
+			} else if (product instanceof Campaign) {
+				Collection<ProductBundle> productBundles = ((Campaign) product).getBundles();
+				for (ProductBundle pb : productBundles) {
+					productItems.add(pb.getProduct());
+				}
 			}
 		}
 		return productItems;
@@ -84,14 +92,23 @@ public class StockSystem implements StockSystemRemote {
 			// TODO: Campaigns ????!!!!!!!!!!!????????
 			if (product instanceof IndividualisedProductItem) {
 				productItems.add((IndividualisedProductItem) product);
+			} else if (product instanceof Campaign) {
+				Collection<ProductBundle> productBundles = ((Campaign) product).getBundles();
+				for (ProductBundle pb : productBundles) {
+					productItems.add(pb.getProduct());
+				}
 			}
 		}
 		return productItems;
 	}
 
 	@Override
-	public int getUnitsOnStock(IndividualisedProductItem product, int pointOfSaleId) {
+	public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId) {
 		return stockItemCRUD.getUnitsOnStock(product, pointOfSaleId);
+	}
+	
+	public int getUnitsOnStock(int productId, int pointOfSaleId) {
+		return stockItemCRUD.getUnitsOnStock(productId, pointOfSaleId);
 	}
 
 	@Override

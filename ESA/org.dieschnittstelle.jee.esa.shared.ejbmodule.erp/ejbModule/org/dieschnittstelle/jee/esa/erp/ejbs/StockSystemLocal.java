@@ -2,13 +2,13 @@ package org.dieschnittstelle.jee.esa.erp.ejbs;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 
-@Remote
-public interface StockSystemRemote {
+@Local
+public interface StockSystemLocal {
 	
 		/**
 		 * adds some units of a product to the stock of a point of sale
@@ -51,9 +51,9 @@ public interface StockSystemRemote {
 		 * @return
 		 */
 		public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId);
-		
-		int getUnitsOnStock(int productId, int pointOfSaleId);
 
+		int getUnitsOnStock(int productId, int pointOfSaleId);
+		
 		/**
 		 * returns the total number of units on stock for some product
 		 * 

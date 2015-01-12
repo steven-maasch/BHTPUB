@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -12,7 +13,7 @@ import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 import org.jboss.logging.Logger;
 
 @Stateless
-public class StockItemCRUDStateless implements StockItemCRUDLocal {
+public class StockItemCRUDStateless implements StockItemCRUDLocal, StockItemCRUDRemote {
 
 	
 	private final Logger logger = Logger.getLogger(StockItemCRUDStateless.class);
@@ -65,15 +66,37 @@ public class StockItemCRUDStateless implements StockItemCRUDLocal {
 	@Override
 	public long getSumTotalUnits(AbstractProduct product) {
 		final TypedQuery<Long> query = em.createNamedQuery("StockItem.sumUnitsByProductId", Long.class);
-		return query.setParameter("product_id", product.getId()).getSingleResult();
+		
+		Long totalUnitsOnStock = 0L;
+		try {
+			totalUnitsOnStock = query.setParameter("product_id", product.getId()).getSingleResult();
+		} catch (NoResultException e) {
+			logger.warn("No result for call getSumTotalUnits() with product id: " + product.getId());
+		}
+		return totalUnitsOnStock;
 	}
 
 	@Override
 	public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId) {
+		if (product == null) {
+			throw new IllegalArgumentException("product is null.");
+		}
+		return getUnitsOnStock(product.getId(), pointOfSaleId);
+	}
+
+	@Override
+	public int getUnitsOnStock(int productId, int pointOfSaleId) {
 		final TypedQuery<Integer> query = em.createNamedQuery("StockItem.getUnits", Integer.class);
-		return query.setParameter("product_id", product.getId())
-				.setParameter("pos_id", pointOfSaleId)
-				.getSingleResult();
+		
+		Integer unitsOnStock = 0;
+		try {
+			unitsOnStock = query.setParameter("product_id", productId)
+					.setParameter("pos_id", pointOfSaleId)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			logger.warn("No result for call getUnitsOnStock with product id: " + productId + " and point of sale id : " + pointOfSaleId);
+		}
+		return  unitsOnStock;
 	}
 
 }

@@ -43,6 +43,7 @@ public class TestStockSystem {
 	
 	@Test 
 	public void stockSystemWorks() {
+		
 		// add to stock
 		stockSystemClient.addToStock(PRODUCT_1, TOUCHPOINT_1.getErpPointOfSaleId(), 100);
 		stockSystemClient.addToStock(PRODUCT_2, TOUCHPOINT_1.getErpPointOfSaleId(), 50);
