@@ -1,5 +1,7 @@
 package org.dieschnittstelle.jee.esa.ejbs.client.ejbclients;
 
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.STOCK_SYSTEM_BEAN;
+
 import java.util.List;
 
 import javax.naming.Context;
@@ -7,9 +9,6 @@ import javax.naming.InitialContext;
 
 import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
-import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
-
-import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.*;
 
 public class StockSystemClient implements StockSystemRemote {
 
@@ -24,23 +23,23 @@ public class StockSystemClient implements StockSystemRemote {
 	
 	
 	@Override
-	public void addToStock(IndividualisedProductItem product, int pointOfSaleId, int units) {
+	public void addToStock(AbstractProduct product, int pointOfSaleId, int units) {
 		this.proxy.addToStock(product, pointOfSaleId, units);
 	}
 
 	@Override
-	public void removeFromStock(IndividualisedProductItem product, int pointOfSaleId,
+	public void removeFromStock(AbstractProduct product, int pointOfSaleId,
 			int units) {
 		this.proxy.removeFromStock(product, pointOfSaleId, units);
 	}
 
 	@Override
-	public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId) {
+	public List<AbstractProduct> getProductsOnStock(int pointOfSaleId) {
 		return this.proxy.getProductsOnStock(pointOfSaleId);
 	}
 
 	@Override
-	public List<IndividualisedProductItem> getAllProductsOnStock() {
+	public List<AbstractProduct> getAllProductsOnStock() {
 		return this.proxy.getAllProductsOnStock();
 	}
 
@@ -55,12 +54,12 @@ public class StockSystemClient implements StockSystemRemote {
 	}
 	
 	@Override
-	public int getTotalUnitsOnStock(IndividualisedProductItem product) {
+	public int getTotalUnitsOnStock(AbstractProduct product) {
 		return this.proxy.getTotalUnitsOnStock(product);
 	}
 
 	@Override
-	public List<Integer> getPointsOfSale(IndividualisedProductItem product) {
+	public List<Integer> getPointsOfSale(AbstractProduct product) {
 		return this.proxy.getPointsOfSale(product);
 	}
 

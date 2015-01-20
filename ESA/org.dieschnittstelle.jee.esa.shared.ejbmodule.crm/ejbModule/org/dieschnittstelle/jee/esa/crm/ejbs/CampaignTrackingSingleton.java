@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
 /*
  * UE EJB1: kommentieren Sie die @Startup Annotation aus
  */
-//@Startup
+@Startup
 @javax.ejb.ConcurrencyManagement(javax.ejb.ConcurrencyManagementType.CONTAINER)
 public class CampaignTrackingSingleton implements CampaignTrackingRemote, CampaignTrackingLocal {
 

@@ -24,7 +24,7 @@ public class TestShoppingSession {
 	public void stockSystemWorksWithShoppingSession() throws Exception {
 		
 		TotalUsecase uc = new TotalUsecase();
-		uc.setStepping(false);
+		uc.setStepping(true);
 		
 		uc.runAll();
 		

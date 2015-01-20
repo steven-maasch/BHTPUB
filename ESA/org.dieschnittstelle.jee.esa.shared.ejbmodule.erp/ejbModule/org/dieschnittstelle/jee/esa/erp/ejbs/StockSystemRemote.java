@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
-import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 
 @Remote
 public interface StockSystemRemote {
@@ -17,7 +16,7 @@ public interface StockSystemRemote {
 		 * @param pointOfSaleId
 		 * @param units
 		 */
-		public void addToStock(IndividualisedProductItem product,int pointOfSaleId,int units);
+		void addToStock(AbstractProduct product,int pointOfSaleId,int units);
 
 		/**
 		 * removes some units of a product from the stock of a point of sale
@@ -26,7 +25,7 @@ public interface StockSystemRemote {
 		 * @param pointOfSaleId
 		 * @param units
 		 */
-		public void removeFromStock(IndividualisedProductItem product,int pointOfSaleId,int units);
+		void removeFromStock(AbstractProduct product,int pointOfSaleId,int units);
 		
 		/**
 		 * returns all products on stock of some pointOfSale
@@ -34,14 +33,14 @@ public interface StockSystemRemote {
 		 * @param pointOfSaleId
 		 * @return
 		 */
-		public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId);
+		List<AbstractProduct> getProductsOnStock(int pointOfSaleId);
 
 		/**
 		 * returns all products on stock
 		 * 
 		 * @return
 		 */
-		public List<IndividualisedProductItem> getAllProductsOnStock();
+		List<AbstractProduct> getAllProductsOnStock();
 
 		/**
 		 * returns the units on stock for a product at some point of sale
@@ -50,7 +49,7 @@ public interface StockSystemRemote {
 		 * @param pointOfSaleId
 		 * @return
 		 */
-		public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId);
+		int getUnitsOnStock(AbstractProduct product, int pointOfSaleId);
 		
 		int getUnitsOnStock(int productId, int pointOfSaleId);
 
@@ -60,7 +59,7 @@ public interface StockSystemRemote {
 		 * @param product
 		 * @return
 		 */
-		public int getTotalUnitsOnStock(IndividualisedProductItem product);
+		int getTotalUnitsOnStock(AbstractProduct product);
 		
 		/**
 		 * returns the points of sale where some product is available
@@ -68,6 +67,6 @@ public interface StockSystemRemote {
 		 * @param product
 		 * @return
 		 */
-		public List<Integer> getPointsOfSale(IndividualisedProductItem product);
+		List<Integer> getPointsOfSale(AbstractProduct product);
 
 }

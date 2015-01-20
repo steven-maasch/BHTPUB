@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Local;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
-import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 
 @Local
 public interface StockSystemLocal {
@@ -17,7 +16,7 @@ public interface StockSystemLocal {
 		 * @param pointOfSaleId
 		 * @param units
 		 */
-		public void addToStock(IndividualisedProductItem product,int pointOfSaleId,int units);
+		public void addToStock(AbstractProduct product, int pointOfSaleId,int units);
 
 		/**
 		 * removes some units of a product from the stock of a point of sale
@@ -26,7 +25,8 @@ public interface StockSystemLocal {
 		 * @param pointOfSaleId
 		 * @param units
 		 */
-		public void removeFromStock(IndividualisedProductItem product,int pointOfSaleId,int units);
+		
+		public void removeFromStock(AbstractProduct product, int pointOfSaleId, int units);
 		
 		/**
 		 * returns all products on stock of some pointOfSale
@@ -34,14 +34,14 @@ public interface StockSystemLocal {
 		 * @param pointOfSaleId
 		 * @return
 		 */
-		public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId);
+		public List<AbstractProduct> getProductsOnStock(int pointOfSaleId);
 
 		/**
 		 * returns all products on stock
 		 * 
 		 * @return
 		 */
-		public List<IndividualisedProductItem> getAllProductsOnStock();
+		public List<AbstractProduct> getAllProductsOnStock();
 
 		/**
 		 * returns the units on stock for a product at some point of sale
@@ -60,7 +60,7 @@ public interface StockSystemLocal {
 		 * @param product
 		 * @return
 		 */
-		public int getTotalUnitsOnStock(IndividualisedProductItem product);
+		public int getTotalUnitsOnStock(AbstractProduct product);
 		
 		/**
 		 * returns the points of sale where some product is available
@@ -68,6 +68,6 @@ public interface StockSystemLocal {
 		 * @param product
 		 * @return
 		 */
-		public List<Integer> getPointsOfSale(IndividualisedProductItem product);
+		public List<Integer> getPointsOfSale(AbstractProduct product);
 
 }

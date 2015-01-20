@@ -31,7 +31,7 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	private PointOfSaleCRUDLocal pointOfSaleCRUD;
 	
 	@Override
-	public void addToStock(final IndividualisedProductItem product,
+	public void addToStock(final AbstractProduct product,
 			final int pointOfSaleId, final int units) {
 		
 		final PointOfSale pointOfSale = pointOfSaleCRUD.readPointOfSale(pointOfSaleId);
@@ -51,22 +51,9 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	}
 
 	@Override
-	public void removeFromStock(IndividualisedProductItem product,
-			int pointOfSaleId, int units) {
-		
-		final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
-		if (stockItem != null) {
-			int newUnits = stockItem.getUnits() - units;
-			stockItem.setUnits(newUnits < 0 ? 0 : newUnits);
-			em.merge(stockItem);
-			// TODO: Q: IF 0 DELETE?
-		}
-	}
-
-	@Override
-	public List<IndividualisedProductItem> getProductsOnStock(int pointOfSaleId) {
-		final List<IndividualisedProductItem> productItems = 
-				new LinkedList<IndividualisedProductItem>();
+	public List<AbstractProduct> getProductsOnStock(int pointOfSaleId) {
+		final List<AbstractProduct> productItems = 
+				new LinkedList<AbstractProduct>();
 		
 		for (StockItem stockItem : stockItemCRUD.getAllStockItemsByPosId(pointOfSaleId)) {
 			final AbstractProduct product = stockItem.getProduct();
@@ -84,8 +71,8 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	}
 
 	@Override
-	public List<IndividualisedProductItem> getAllProductsOnStock() {
-		final List<IndividualisedProductItem> productItems = new LinkedList<IndividualisedProductItem>();
+	public List<AbstractProduct> getAllProductsOnStock() {
+		final List<AbstractProduct> productItems = new LinkedList<AbstractProduct>();
 		
 		for (StockItem stockItem : stockItemCRUD.getAllStockItems()) {
 			final AbstractProduct product = stockItem.getProduct();
@@ -112,19 +99,31 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	}
 
 	@Override
-	public int getTotalUnitsOnStock(IndividualisedProductItem product) {
+	public int getTotalUnitsOnStock(AbstractProduct product) {
 		// TODO: Maybe change return type to long
 		return (int) stockItemCRUD.getSumTotalUnits(product);
 	}
 
 	@Override
-	public List<Integer> getPointsOfSale(IndividualisedProductItem product) {
+	public List<Integer> getPointsOfSale(AbstractProduct product) {
 		final List<Integer> pointOfSaleIds = new LinkedList<Integer>();
 
 		for (StockItem stockItem : stockItemCRUD.getStockItemsByProduct(product)) {
 			pointOfSaleIds.add(stockItem.getPos().getId());
 		}
 		return pointOfSaleIds;
+	}
+
+	@Override
+	public void removeFromStock(AbstractProduct product, int pointOfSaleId,
+			int units) {
+		final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);
+		if (stockItem != null) {
+			int newUnits = stockItem.getUnits() - units;
+			stockItem.setUnits(newUnits < 0 ? 0 : newUnits);
+			em.merge(stockItem);
+			// TODO: Q: IF 0 DELETE?
+		}
 	}
 
 }

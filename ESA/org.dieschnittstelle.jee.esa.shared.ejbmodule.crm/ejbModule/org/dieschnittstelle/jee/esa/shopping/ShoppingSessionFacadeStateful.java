@@ -67,6 +67,33 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 	}
 
 	/*
+	 * Check if product units are in stock 
+	 * in the chosen point of sale.
+	 */
+	private boolean enoughUnitsInStock(final CrmProductBundle productBundle) {
+		final int unitsInStock = this.stockSystem.getUnitsOnStock(
+				productBundle.getErpProductId(), 
+				touchpoint.getErpPointOfSaleId());
+		return productBundle.getUnits() <= unitsInStock;
+	}
+	
+	private boolean allProductsInStock() {
+		logger.info(">> allProductsInStock()");
+		for (CrmProductBundle productBundle : this.shoppingCart
+				.getProductBundles()) {
+			if (!enoughUnitsInStock(productBundle)) {
+				logger.info("return false");
+				logger.info("<< allProductsInStock()");
+				return false;
+			}
+		}
+		logger.info("return true");
+		logger.info("<< allProductsInStock()");
+		return true;
+	}
+	
+
+	/*
 	 * verify whether campaigns are still valid
 	 */
 	public void verifyCampaigns() {
@@ -77,16 +104,6 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 		
 		for (CrmProductBundle productBundle : this.shoppingCart
 				.getProductBundles()) {
-
-			
-			// TODO: Still working
-			
-			if (productUnitsInStock(productBundle)) {
-				logger.warn("-- Enough units in stock.");
-			} else {
-				logger.warn("-- NOT Enough units in stock.");
-			}
-			
 			if (productBundle.isCampaign()) {
 				int availableCampaigns = this.campaignTracking
 						.existsValidCampaignExecutionAtTouchpoint(
@@ -103,22 +120,9 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 			}
 		}
 	}
-	
-	
-	/*
-	 * Check if product units are in stock 
-	 * in the chosen point of sale.
-	 */
-	private boolean productUnitsInStock(final CrmProductBundle productBundle) {
-		final int unitsInStock = this.stockSystem.getUnitsOnStock(
-				productBundle.getErpProductId(), 
-				touchpoint.getErpPointOfSaleId());
-		return productBundle.getUnits() <= unitsInStock;
-	}
-	
 
 	public void purchase() {
-		logger.info("purchase()");
+		logger.info(">> purchase()");
 
 		if (this.customer == null || this.touchpoint == null) {
 			throw new RuntimeException(
@@ -126,11 +130,13 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 							+ this.customer + "/" + this.touchpoint);
 		}
 
+		if (!allProductsInStock()) {
+			throw new RuntimeException("Not enough product units");
+		}
+		
 		// verify the campaigns
 		verifyCampaigns();
-		
-		
-		
+
 		// read out the products from the cart
 		List<CrmProductBundle> products = this.shoppingCart.getProductBundles();
 
@@ -143,6 +149,11 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 						productBundle.getUnits());
 			}
 			
+			logger.info("-- productBundle class: " + productBundle.getClass().getSimpleName());
+			
+			// TODO: Remove products
+			//stockSystem.removeFromStock(product, pointOfSaleId, units);
+			
 			
 		}
 
@@ -154,11 +165,4 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 
 		logger.info("purchase(): done.\n");
 	}
-	
-	@PreDestroy
-	public void destroy() {
-		logger.info("-- Destroy Shopping Session");
-	}
-	
-	
 }
