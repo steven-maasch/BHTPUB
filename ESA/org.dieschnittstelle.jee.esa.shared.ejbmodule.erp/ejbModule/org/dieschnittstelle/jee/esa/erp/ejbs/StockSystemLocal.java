@@ -52,7 +52,7 @@ public interface StockSystemLocal {
 		 */
 		public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId);
 
-		int getUnitsOnStock(int productId, int pointOfSaleId);
+		int getUnitsOnStock2(int productId, int pointOfSaleId);
 		
 		/**
 		 * returns the total number of units on stock for some product

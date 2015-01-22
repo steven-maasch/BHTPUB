@@ -123,7 +123,7 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 				throw new IllegalStateException("Product not in stock => ProductId: " + productBundle.getErpProductId());
 			}
 			
-			final int unitsInStock = stockSystem.getUnitsOnStock(
+			final int unitsInStock = stockSystem.getUnitsOnStock2(
 					productBundle.getErpProductId(), 
 					touchpoint.getErpPointOfSaleId());
 			

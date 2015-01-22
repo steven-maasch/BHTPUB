@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -18,6 +21,8 @@ import org.dieschnittstelle.jee.esa.erp.entities.PointOfSale;
 import org.dieschnittstelle.jee.esa.erp.entities.ProductBundle;
 import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
+@WebService(targetNamespace = "http://dieschnittstelle.org/jee/esa/uebungen/add3", serviceName = "StockSystemEjbWebService")
+@SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @Singleton
 public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	
@@ -30,9 +35,9 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 	@EJB
 	private PointOfSaleCRUDLocal pointOfSaleCRUD;
 	
+	@WebMethod
 	@Override
-	public void addToStock(final AbstractProduct product,
-			final int pointOfSaleId, final int units) {
+	public void addToStock(AbstractProduct product, int pointOfSaleId, int units) {
 		
 		final PointOfSale pointOfSale = pointOfSaleCRUD.readPointOfSale(pointOfSaleId);
 		
@@ -50,6 +55,7 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 		}
 	}
 
+	@WebMethod
 	@Override
 	public List<AbstractProduct> getProductsOnStock(int pointOfSaleId) {
 		final List<AbstractProduct> productItems = 
@@ -70,6 +76,7 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 		return productItems;
 	}
 
+	@WebMethod
 	@Override
 	public List<AbstractProduct> getAllProductsOnStock() {
 		final List<AbstractProduct> productItems = new LinkedList<AbstractProduct>();
@@ -89,21 +96,26 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 		return productItems;
 	}
 
+	@WebMethod
 	@Override
 	public int getUnitsOnStock(AbstractProduct product, int pointOfSaleId) {
 		return stockItemCRUD.getUnitsOnStock(product, pointOfSaleId);
 	}
 	
-	public int getUnitsOnStock(int productId, int pointOfSaleId) {
+	@WebMethod(operationName="fuckYou")
+	@Override
+	public int getUnitsOnStock2(int productId, int pointOfSaleId) {
 		return stockItemCRUD.getUnitsOnStock(productId, pointOfSaleId);
 	}
 
+	@WebMethod
 	@Override
 	public int getTotalUnitsOnStock(AbstractProduct product) {
 		// TODO: Maybe change return type to long
 		return (int) stockItemCRUD.getSumTotalUnits(product);
 	}
 
+	@WebMethod
 	@Override
 	public List<Integer> getPointsOfSale(AbstractProduct product) {
 		final List<Integer> pointOfSaleIds = new LinkedList<Integer>();
@@ -114,6 +126,7 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 		return pointOfSaleIds;
 	}
 
+	@WebMethod
 	@Override
 	public void removeFromStock(AbstractProduct product, int pointOfSaleId,
 			int units) {
