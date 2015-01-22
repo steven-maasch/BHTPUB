@@ -36,8 +36,8 @@ public class TestShoppingSession {
 		// two shopping carts will be processed successfully - the third one will be interrupted because campaigns are not available anymore. 
 		
 		// initially, 100 units have been put on stock for each product		
-		assertEquals("after shopping cart processing, number of p1 is correct",80,stockSystemClient.getUnitsOnStock(PRODUCT_1, TOUCHPOINT_1.getErpPointOfSaleId()));
-		assertEquals("after shopping cart processing, number of p2 is correct",80,stockSystemClient.getUnitsOnStock(PRODUCT_2, TOUCHPOINT_1.getErpPointOfSaleId()));
+		assertEquals("after shopping cart processing, number of p1 is correct",95,stockSystemClient.getUnitsOnStock(PRODUCT_1, TOUCHPOINT_1.getErpPointOfSaleId()));
+		assertEquals("after shopping cart processing, number of p2 is correct",98,stockSystemClient.getUnitsOnStock(PRODUCT_2, TOUCHPOINT_1.getErpPointOfSaleId()));
 	}
 	
 }

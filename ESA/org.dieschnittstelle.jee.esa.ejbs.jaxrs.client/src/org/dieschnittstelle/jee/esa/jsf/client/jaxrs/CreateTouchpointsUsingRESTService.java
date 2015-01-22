@@ -49,13 +49,13 @@ public class CreateTouchpointsUsingRESTService {
 
 		// create the touchpoint
 		Address addr1 = new Address();
-		addr1.setId(-1);
+//		addr1.setId(-1);
 		addr1.setStreet("Muellerstrasse");
 		addr1.setHouseNr("147");
 		addr1.setZipCode("13353");
 		addr1.setCity("Berlin");
 		StationaryTouchpoint tp = new StationaryTouchpoint();
-		tp.setId(-1);
+//		tp.setId(-1);
 		tp.setName("Rathaus Wedding");
 		tp.setLocation(addr1);
 
@@ -66,13 +66,13 @@ public class CreateTouchpointsUsingRESTService {
 
 		// create the touchpoint
 		Address addr2 = new Address();
-		addr2.setId(-1);
+//		addr2.setId(-1);
 		addr2.setStreet("Luxemburger Strasse");
 		addr2.setHouseNr("10");
 		addr2.setZipCode("13353");
 		addr2.setCity("Berlin");
 		StationaryTouchpoint tp2 = new StationaryTouchpoint();
-		tp2.setId(-1);
+//		tp2.setId(-1);
 		tp2.setName("BHT Mensa");
 		tp2.setLocation(addr1);
 

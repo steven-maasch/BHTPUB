@@ -67,33 +67,6 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 	}
 
 	/*
-	 * Check if product units are in stock 
-	 * in the chosen point of sale.
-	 */
-	private boolean enoughUnitsInStock(final CrmProductBundle productBundle) {
-		final int unitsInStock = this.stockSystem.getUnitsOnStock(
-				productBundle.getErpProductId(), 
-				touchpoint.getErpPointOfSaleId());
-		return productBundle.getUnits() <= unitsInStock;
-	}
-	
-	private boolean allProductsInStock() {
-		logger.info(">> allProductsInStock()");
-		for (CrmProductBundle productBundle : this.shoppingCart
-				.getProductBundles()) {
-			if (!enoughUnitsInStock(productBundle)) {
-				logger.info("return false");
-				logger.info("<< allProductsInStock()");
-				return false;
-			}
-		}
-		logger.info("return true");
-		logger.info("<< allProductsInStock()");
-		return true;
-	}
-	
-
-	/*
 	 * verify whether campaigns are still valid
 	 */
 	public void verifyCampaigns() {
@@ -129,40 +102,57 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 					"cannot commit shopping session! Either customer or touchpoint has not been set: "
 							+ this.customer + "/" + this.touchpoint);
 		}
-
-		if (!allProductsInStock()) {
-			throw new RuntimeException("Not enough product units");
-		}
 		
 		// verify the campaigns
 		verifyCampaigns();
 
-		// read out the products from the cart
-		List<CrmProductBundle> products = this.shoppingCart.getProductBundles();
+		final List<CrmProductBundle> allProductBundles = this.shoppingCart.getProductBundles();
+		final List<AbstractProduct> allProductsInStock = stockSystem.getAllProductsOnStock();
+		
+		for (CrmProductBundle productBundle : allProductBundles) {
+			
+			AbstractProduct product = null;
+			for (AbstractProduct stockItem : allProductsInStock) {
+				if (productBundle.getErpProductId() == stockItem.getId()) {
+					product = stockItem;
+					break;
+				}
+			}
+			
+			if (product == null) {
+				throw new IllegalStateException("Product not in stock => ProductId: " + productBundle.getErpProductId());
+			}
+			
+			final int unitsInStock = stockSystem.getUnitsOnStock(
+					productBundle.getErpProductId(), 
+					touchpoint.getErpPointOfSaleId());
+			
+			if (unitsInStock < productBundle.getUnits()) {
+				throw new IllegalStateException("Not enough untis in stock.");
+			}
+			
+			stockSystem.removeFromStock(product, 
+					touchpoint.getErpPointOfSaleId(), 
+					productBundle.getUnits());
+			
+		}
 
 		// iterate over the products and purchase the campaigns
-		for (CrmProductBundle productBundle : this.shoppingCart
-				.getProductBundles()) {
+		for (CrmProductBundle productBundle : allProductBundles) {
 			if (productBundle.isCampaign()) {
 				this.campaignTracking.purchaseCampaignAtTouchpoint(
 						productBundle.getErpProductId(), this.touchpoint,
 						productBundle.getUnits());
 			}
 			
-			logger.info("-- productBundle class: " + productBundle.getClass().getSimpleName());
-			
-			// TODO: Remove products
-			//stockSystem.removeFromStock(product, pointOfSaleId, units);
-			
-			
 		}
 
 		// then we add a new customer transaction for the current purchase
 		CustomerTransaction transaction = new CustomerTransaction(
-				this.customer, this.touchpoint, products);
+				this.customer, this.touchpoint, allProductBundles);
 		transaction.setCompleted(true);
 		customerTracking.createTransaction(transaction);
 
-		logger.info("purchase(): done.\n");
+		logger.info("<< purchase()");
 	}
 }

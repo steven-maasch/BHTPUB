@@ -144,20 +144,23 @@ public class TotalUsecase {
 					session.addProduct(Constants.PRODUCT_1, 2);
 					session.addProduct(Constants.PRODUCT_1, 3);
 					session.addProduct(Constants.PRODUCT_2, 2);
-					session.addProduct(Constants.CAMPAIGN_1, 1);
-					//session.addProduct(Constants.CAMPAIGN_2, 2);
+//					session.addProduct(Constants.CAMPAIGN_1, 1);
+//					session.addProduct(Constants.CAMPAIGN_2, 2);
 
 					if (this.stepping) Util.step();
 
 					// now try to commit the session
 					session.purchase();
+					
+					throw new Exception("Stop Test");
+					
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					// throwing exceptions out of main is bad style, yet we
 					// need it to interrupt shopping in TotalUsecase
 					throw new RuntimeException(e);
 				}
-				if (this.stepping) Util.step();
+//				if (this.stepping) Util.step();
 			}
 		} catch (Exception e) {
 			logger.error("got exception during shopping: " + e, e);

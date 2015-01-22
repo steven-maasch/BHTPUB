@@ -131,11 +131,6 @@ public class StockItem implements Serializable {
 		logger.info("onPreUpdate(): " + this);
 	}
 
-	public String toString() {
-		return "{StockItemEntity " + this.price + ", " + this.product + "@"
-				+ this.pos + "}";
-	}
-
 	public int getUnits() {
 		return units;
 	}
@@ -144,4 +139,19 @@ public class StockItem implements Serializable {
 		this.units = units;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("StockItem [pos=");
+		builder.append(pos);
+		builder.append(", product=");
+		builder.append(product);
+		builder.append(", price=");
+		builder.append(price);
+		builder.append(", units=");
+		builder.append(units);
+		builder.append("]");
+		return builder.toString();
+	}
+	
 }

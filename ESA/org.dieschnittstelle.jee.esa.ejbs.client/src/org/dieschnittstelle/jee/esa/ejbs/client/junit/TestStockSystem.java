@@ -1,22 +1,21 @@
 package org.dieschnittstelle.jee.esa.ejbs.client.junit;
 
-import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.*;
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.PRODUCT_1;
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.PRODUCT_2;
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.TOUCHPOINT_1;
+import static org.dieschnittstelle.jee.esa.ejbs.client.Constants.TOUCHPOINT_2;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
-import org.dieschnittstelle.jee.esa.crm.entities.Address;
-import org.dieschnittstelle.jee.esa.crm.entities.StationaryTouchpoint;
 import org.dieschnittstelle.jee.esa.ejbs.client.Constants;
 import org.dieschnittstelle.jee.esa.ejbs.client.ejbclients.ProductCRUDClient;
 import org.dieschnittstelle.jee.esa.ejbs.client.ejbclients.StockSystemClient;
 import org.dieschnittstelle.jee.esa.ejbs.client.ejbclients.TouchpointAndPointOfSaleCRUDClient;
 import org.dieschnittstelle.jee.esa.erp.entities.IndividualisedProductItem;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 
 public class TestStockSystem {
