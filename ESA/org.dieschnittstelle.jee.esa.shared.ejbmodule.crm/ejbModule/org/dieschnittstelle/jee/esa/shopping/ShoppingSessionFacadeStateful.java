@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
 
 @Stateful
 @StatefulTimeout(value=10, unit=TimeUnit.MINUTES)
-public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemote {
+public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeLocal, ShoppingSessionFacadeRemote {
 
 	protected static Logger logger = Logger.getLogger(ShoppingSessionFacadeStateful.class);
 	
