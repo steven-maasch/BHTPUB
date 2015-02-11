@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
@@ -128,6 +130,7 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 
 	@WebMethod
 	@Override
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public void removeFromStock(AbstractProduct product, int pointOfSaleId,
 			int units) {
 		final StockItem stockItem = stockItemCRUD.getStockItem(product, pointOfSaleId);

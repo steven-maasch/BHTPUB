@@ -26,9 +26,9 @@ public class ProductCRUDWebServiceImpl implements IProductCRUDWebService {
 		// read out the dataAccessor
 		this.productCRUD = (GenericCRUDExecutor<AbstractProduct>) servletContext.getAttribute("productCRUD");
 		
-		logger.debug("read out the productCRUD from the servlet context: " + this.productCRUD);		
+		logger.debug("read out the productCRUD from the servlet context: " + this.productCRUD);
 	}
-	
+
 	@Override
 	public IndividualisedProductItem createProduct(AbstractProduct product) {
 		return (IndividualisedProductItem) productCRUD.createObject(product);

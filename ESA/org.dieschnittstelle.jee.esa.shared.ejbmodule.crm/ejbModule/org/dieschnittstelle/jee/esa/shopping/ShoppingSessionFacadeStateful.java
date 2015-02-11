@@ -7,10 +7,14 @@ import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.StatefulTimeout;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.dieschnittstelle.jee.esa.crm.ejbs.CampaignTrackingLocal;
 import org.dieschnittstelle.jee.esa.crm.ejbs.CustomerTrackingLocal;
 import org.dieschnittstelle.jee.esa.crm.ejbs.ShoppingCartLocal;
+import org.dieschnittstelle.jee.esa.crm.ejbs.ShoppingException;
+import org.dieschnittstelle.jee.esa.crm.ejbs.ShoppingException.ShoppingSessionExceptionReason;
 import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
 import org.dieschnittstelle.jee.esa.crm.entities.CrmProductBundle;
 import org.dieschnittstelle.jee.esa.crm.entities.Customer;
@@ -69,10 +73,10 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 	/*
 	 * verify whether campaigns are still valid
 	 */
-	public void verifyCampaigns() {
+	public void verifyCampaigns() throws ShoppingException {
 		if (this.customer == null || this.touchpoint == null) {
-			throw new RuntimeException(
-					"cannot verify campaigns! No touchpoint has been set!");
+			logger.warn("cannot verify campaigns! No touchpoint has been set!");
+			throw new ShoppingException(ShoppingSessionExceptionReason.INCOMPLETE_SESSION_DATA);
 		}
 		
 		for (CrmProductBundle productBundle : this.shoppingCart
@@ -85,10 +89,11 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 				logger.info("got available campaigns for product " + productBundle.getErpProductId() + ": " + availableCampaigns);
 				// we check whether we have sufficient campaign items available
 				if (availableCampaigns < productBundle.getUnits()) {
-					throw new RuntimeException(
-							"verifyCampaigns() failed for productBundle "
-									+ productBundle + " at touchpoint "
-									+ this.touchpoint + "! Need " + productBundle.getUnits() + " instances of campaign, but only got: " +availableCampaigns);
+					logger.warn("verifyCampaigns() failed for productBundle "
+							+ productBundle + " at touchpoint "
+							+ this.touchpoint + "! Need " + productBundle.getUnits() 
+							+ " instances of campaign, but only got: " + availableCampaigns);
+					throw new ShoppingException(ShoppingSessionExceptionReason.CAMPAIGN_INVALID);
 				}
 			}
 		}
@@ -98,9 +103,10 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 		logger.info(">> purchase()");
 
 		if (this.customer == null || this.touchpoint == null) {
-			throw new RuntimeException(
+			logger.warn(
 					"cannot commit shopping session! Either customer or touchpoint has not been set: "
 							+ this.customer + "/" + this.touchpoint);
+			throw new ShoppingException(ShoppingSessionExceptionReason.INCOMPLETE_SESSION_DATA);
 		}
 		
 		// verify the campaigns
@@ -120,7 +126,8 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 			}
 			
 			if (product == null) {
-				throw new IllegalStateException("Product not in stock => ProductId: " + productBundle.getErpProductId());
+				logger.warn("Product not in stock => ProductId: " + productBundle.getErpProductId());
+				throw new ShoppingException(ShoppingSessionExceptionReason.CAMPAIGN_INVALID);
 			}
 			
 			final int unitsInStock = stockSystem.getUnitsOnStock2(
@@ -128,7 +135,8 @@ public class ShoppingSessionFacadeStateful implements ShoppingSessionFacadeRemot
 					touchpoint.getErpPointOfSaleId());
 			
 			if (unitsInStock < productBundle.getUnits()) {
-				throw new IllegalStateException("Not enough untis in stock.");
+				logger.error("Not enough untis in stock.");
+				throw new ShoppingException(ShoppingSessionExceptionReason.STOCK_EXCEEDED);
 			}
 			
 			stockSystem.removeFromStock(product, 
