@@ -15,7 +15,7 @@ import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 @WebService(targetNamespace = "http://dieschnittstelle.org/jee/esa/uebungen/add2", serviceName = "ProductEjbCRUDWebService")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @Stateless
-public class ProductCRUDStateless implements ProductCRUDRemote {
+public class ProductCRUDStateless implements ProductCRUDLocal, ProductCRUDRemote {
 	
 	@PersistenceContext(unitName = "crm_erp_PU")
 	private EntityManager em;

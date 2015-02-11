@@ -54,7 +54,11 @@ public class TestProductCRUD {
 		/* DELETE */
 		assertTrue("product can be deleted",  client.deleteProduct(PRODUCT_1.getId()));
 		assertNull("deleted product does not exist anymore", client.readProduct(PRODUCT_1.getId()));
-		assertEquals("product list is reduced on delete",prodlistBefore.size(),client.readAllProducts().size());				
+		assertEquals("product list is reduced on delete",prodlistBefore.size(),client.readAllProducts().size());
+		
+		// for jsf
+//		client.createProduct(PRODUCT_2);
+
 	}
 	
 	@Test

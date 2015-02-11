@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.dieschnittstelle.jee.esa.crm.entities.CrmProductBundle;
+import org.dieschnittstelle.jee.esa.erp.ejbs.crud.ProductCRUDLocal;
+import org.dieschnittstelle.jee.esa.erp.ejbs.crud.ProductCRUDStateless;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.jsf.Constants;
 import org.dieschnittstelle.jee.esa.jsf.model.ShoppingCartModel;
@@ -45,25 +49,35 @@ public class ProductsViewController {
 	/*
 	 * UE JSF1: use the products bean instead of the local list of products
 	 */
-	private List<AbstractProduct> products = new ArrayList<AbstractProduct>();
+//	private List<AbstractProduct> products = new ArrayList<AbstractProduct>();
 
+	@EJB(mappedName="java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/ProductCRUDStateless!org.dieschnittstelle.jee.esa.erp.ejbs.crud.ProductCRUDLocal")
+	private ProductCRUDLocal products;
+	
 	/*
 	 * we need getters and setters for the bean attributes accessed via facelets
 	 */
 	public List<AbstractProduct> getProducts() {
-		return products;
+		logger.debug(products.readAllProducts());
+		if (products.readAllProducts() != null) {
+			return products.readAllProducts();
+		} else {
+			return null;
+		}
+
 	}
 
 	public void setProducts(List<AbstractProduct> products) {
-		this.products = products;
+		
+//		this.products = products;
 	}
 
 	@PostConstruct
 	public void startup() {
 		logger.info("@PostConstruct: " + shoppingCartModel);
 		// we add test products here
-		products.add(Constants.PRODUCT_1);
-		products.add(Constants.PRODUCT_2);
+//		products.createProduct(Constants.PRODUCT_1);
+//		products.add(Constants.PRODUCT_2);
 	}
 	
 	/**
@@ -84,7 +98,9 @@ public class ProductsViewController {
 		// add the product to the cart
 		logProductBundleKlass();
 		
-		AbstractProduct product = findProduct(Integer.parseInt(id));
+		
+//		AbstractProduct product = findProduct(Integer.parseInt(id));
+		AbstractProduct product = products.readProduct(Integer.parseInt(id));
 		CrmProductBundle productBundle = new CrmProductBundle(product.getId(),
 				1);
 		productBundle.setProductObj(product);
@@ -121,13 +137,13 @@ public class ProductsViewController {
 	 * @param id
 	 * @return
 	 */
-	private AbstractProduct findProduct(int id) {
-		for (AbstractProduct prod : this.products) {
-			if (prod.getId() == id)
-				return prod;
-		}
-
-		return null;
-	}
+//	private AbstractProduct findProduct(int id) {
+//		for (AbstractProduct prod : this.products) {
+//			if (prod.getId() == id)
+//				return prod;
+//		}
+//
+//		return null;
+//	}
 
 }
