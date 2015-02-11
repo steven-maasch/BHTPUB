@@ -46,7 +46,7 @@ public class StockSystemViewController {
 	 * .esa.erp.ejbs.StockSystemLocal
 	 */
 	
-	@Resource(mappedName="java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystemSingleton!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal")
+	@Resource(mappedName="java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystem!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal")
 	private StockSystemLocal stockSystem;
 
 	/*
@@ -152,7 +152,7 @@ public class StockSystemViewController {
 		 * TODO: we use the units diff on StockItemWrapper for determining the number
 		 * of units to add and call the add method on stockSystem
 		 */
-		stockSystem.updateSpecificStockItem(siWrapper.getProduct(), siWrapper.getPos().getId());
+//		stockSystem.updateSpecificStockItem(siWrapper.getProduct(), siWrapper.getPos().getId());
 		/*
 		 * TODO: once we are done we call the updateMethods on the item to set the new
 		 * value of units on the StockItem object itself
@@ -201,7 +201,7 @@ public class StockSystemViewController {
 		 * map
 		 */
 		logger.info("getCompleteStock(): "+stockSystem.getAllProductsOnStock());
-		for (StockItem item : stockSystem.getAllProductsOnStock()) {
+		for (StockItem item : stockSystem.getAllStockItems()) {
 			StockItemWrapper wrapper = new StockItemWrapper(item);
 			this.stockItemsMap.put(wrapper.getId(), wrapper);
 			System.out.println("PREIS: "+item.getProduct().getPrice());

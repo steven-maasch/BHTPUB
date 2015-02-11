@@ -142,4 +142,10 @@ public class StockSystem implements StockSystemRemote, StockSystemLocal {
 		}
 	}
 
+	@Override
+	public List<StockItem> getAllStockItems() {
+		// TODO Auto-generated method stub
+		return stockItemCRUD.getAllStockItems();
+	}
+	
 }

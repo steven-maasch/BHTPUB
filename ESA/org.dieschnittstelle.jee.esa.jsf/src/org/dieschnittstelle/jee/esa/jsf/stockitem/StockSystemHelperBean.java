@@ -100,7 +100,7 @@ public class StockSystemHelperBean {
 	private ProductCRUDRemote productCRUD;
 	@Resource(mappedName = "java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.crm/TouchpointAccessStateless!org.dieschnittstelle.jee.esa.crm.ejbs.TouchpointAccessRemote")
 	private TouchpointAccessRemote touchpointAccess;
-	@Resource(mappedName = "java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystemSingleton!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote")
+	@Resource(mappedName = "java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystem!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote")
 	private StockSystemRemote stockSystem;
 	@Resource(mappedName = "java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.crm/CustomerCRUDStateless!org.dieschnittstelle.jee.esa.crm.ejbs.crud.CustomerCRUDRemote")
 	private CustomerCRUDRemote customerCRUD;

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
+import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
 @Remote
 public interface StockSystemRemote {
@@ -68,5 +69,7 @@ public interface StockSystemRemote {
 		 * @return
 		 */
 		List<Integer> getPointsOfSale(AbstractProduct product);
+		
+		public List<StockItem> getAllStockItems();
 
 }

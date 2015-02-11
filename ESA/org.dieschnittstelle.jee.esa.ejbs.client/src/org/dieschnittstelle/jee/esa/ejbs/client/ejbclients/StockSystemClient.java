@@ -7,10 +7,12 @@ import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal;
 import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemRemote;
 import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
+import org.dieschnittstelle.jee.esa.erp.entities.StockItem;
 
-public class StockSystemClient implements StockSystemRemote {
+public class StockSystemClient implements StockSystemRemote, StockSystemLocal {
 
 	private StockSystemRemote proxy;
 	
@@ -20,7 +22,6 @@ public class StockSystemClient implements StockSystemRemote {
 		this.proxy = (StockSystemRemote) context
 				.lookup(STOCK_SYSTEM_BEAN);
 	}
-	
 	
 	@Override
 	public void addToStock(AbstractProduct product, int pointOfSaleId, int units) {
@@ -61,6 +62,12 @@ public class StockSystemClient implements StockSystemRemote {
 	@Override
 	public List<Integer> getPointsOfSale(AbstractProduct product) {
 		return this.proxy.getPointsOfSale(product);
+	}
+
+
+	@Override
+	public List<StockItem> getAllStockItems() {
+		return this.proxy.getAllStockItems();
 	}
 
 }
