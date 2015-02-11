@@ -151,10 +151,12 @@ public class Constants {
 		PRODUCT_1 = new IndividualisedProductItem("Schrippe", ProductType.ROLL,
 				720);
 		// PRODUCT_1.setId(1);
+		PRODUCT_1.setPrice(2);
 
 		PRODUCT_2 = new IndividualisedProductItem("Kirschplunder",
 				ProductType.PASTRY, 1080);
 		// PRODUCT_2.setId(2);
+		PRODUCT_1.setPrice(3);
 
 		CAMPAIGN_1 = new Campaign();
 		// CAMPAIGN_1.setId(3);

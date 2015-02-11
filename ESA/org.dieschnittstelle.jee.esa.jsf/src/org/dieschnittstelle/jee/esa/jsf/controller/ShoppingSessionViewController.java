@@ -25,7 +25,11 @@ import org.dieschnittstelle.jee.esa.crm.ejbs.TouchpointAccessRemote;
 import org.dieschnittstelle.jee.esa.crm.ejbs.crud.CustomerCRUDLocal;
 import org.dieschnittstelle.jee.esa.crm.ejbs.crud.CustomerCRUDRemote;
 import org.dieschnittstelle.jee.esa.crm.entities.AbstractTouchpoint;
+import org.dieschnittstelle.jee.esa.crm.entities.CrmProductBundle;
 import org.dieschnittstelle.jee.esa.crm.entities.Customer;
+import org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal;
+import org.dieschnittstelle.jee.esa.erp.ejbs.crud.ProductCRUDLocal;
+import org.dieschnittstelle.jee.esa.erp.entities.AbstractProduct;
 import org.dieschnittstelle.jee.esa.jsf.model.ShoppingCartModel;
 import org.jboss.logging.Logger;
 
@@ -53,6 +57,9 @@ public class ShoppingSessionViewController {
 	 */
 	@EJB(mappedName="java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.crm/TouchpointAccessStateless!org.dieschnittstelle.jee.esa.crm.ejbs.TouchpointAccessLocal")
 	private TouchpointAccessLocal touchpointAccess;
+	
+	@EJB(mappedName="java:global/org.dieschnittstelle.jee.esa.ejbs/org.dieschnittstelle.jee.esa.shared.ejbmodule.erp/StockSystem!org.dieschnittstelle.jee.esa.erp.ejbs.StockSystemLocal")
+	private StockSystemLocal stockSystem;
 	
 	/**
 	 * this is the touchpoint selected by the user
@@ -191,6 +198,11 @@ public class ShoppingSessionViewController {
 		/*
 		 * U2: implement this using the StockSystem EJB
 		 */
+		
+		for (CrmProductBundle bundle : shoppingCartModel.getProductBundles()) {
+			
+		}
+		
 
 	}
 
@@ -244,13 +256,27 @@ public class ShoppingSessionViewController {
 		for (AbstractTouchpoint tp : touchpointAccess.readAllTouchpoints()) {
 			// we use a local map for being able to convert between touchpoint
 			// strings and touchpoint objects
-			this.touchpointsMap.put(tp.getName(), tp);
-			tpnames.add(tp.getName());
+			if (allProductInStockOnTouchpoint(tp)) {
+				this.touchpointsMap.put(tp.getName(), tp);
+				tpnames.add(tp.getName());
+			}
 		}
 
 		logger.info("getAvailableTouchpoints(): " + tpnames);
 
 		return tpnames;
+	}
+	
+	
+	private boolean allProductInStockOnTouchpoint(AbstractTouchpoint tp) {		
+		for (CrmProductBundle bundle : shoppingCartModel.getProductBundles()) {
+			final int unitsOnStock = stockSystem.getUnitsOnStock2(
+					bundle.getErpProductId(), tp.getErpPointOfSaleId());
+			if (unitsOnStock < bundle.getUnits()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/*
